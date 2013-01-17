@@ -11,6 +11,7 @@ final public class FlexTableDragController extends PickupDragController{
 
 	public FlexTableDragController(AbsolutePanel boundaryPanel,
 			boolean allowDroppingOnBoundaryPanel, TemperatureWatcher temperatureWatcher) {
+		
 		super(boundaryPanel, allowDroppingOnBoundaryPanel);
 		this.parent=temperatureWatcher;
 		
@@ -18,15 +19,18 @@ final public class FlexTableDragController extends PickupDragController{
 
 	@Override
 	public void dragStart(){
-		super.dragStart();
+		super.dragStart();  //TODO: Not working
 	}
 
 	@Override
 	protected Widget newDragProxy(DragContext context){
 		HTML proxy = new HTML();
 		proxy.addStyleName("FlexTable");
-//		if (parent != null %% parent.)  //TODO add so we now which row to move
-		return null;
+		if (parent != null && parent.getCurrentPlace() != null){  //TODO add so we now which row to move
+		proxy.setHTML("<table border='1' ><tr><td>"+parent.getCurrentPlace().getCountry() + "</td><td>"+
+		parent.getCurrentPlace().getArea()+"</td><td>"+ parent.getCurrentPlace().getCity()+"</td><tr></table>");
+		}
+		return proxy;
 	}
 	
 	
