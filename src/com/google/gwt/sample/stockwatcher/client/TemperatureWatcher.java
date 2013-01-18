@@ -84,8 +84,8 @@ public class TemperatureWatcher implements EntryPoint {
 		// Add styles to elements in the stock list table.
 		temperatureFlextable.getRowFormatter().addStyleName(0, "watchListHeader");
 		temperatureFlextable.addStyleName("watchList");
-		//	    stocksFlexTable.getCellFormatter().addStyleName(0, 1, "watchListNumericColumn");
-		//	    stocksFlexTable.getCellFormatter().addStyleName(0, 2, "watchListNumericColumn");
+		//	    temperatureFlextable.getCellFormatter().addStyleName(0, 1, "watchListNumericColumn");
+		//	    temperatureFlextable.getCellFormatter().addStyleName(0, 2, "watchListNumericColumn");
 		temperatureFlextable.getCellFormatter().addStyleName(0, 3, "watchListRemoveColumn");
 		temperatureFlextable.getCellFormatter().addStyleName(0, 4, "watchListRemoveColumn");
 		newSymbolTextBox.setTitle("Country");
@@ -112,8 +112,8 @@ public class TemperatureWatcher implements EntryPoint {
 		// Add styles to elements in the stock list table.
 		temperatureFlextable2.getRowFormatter().addStyleName(0, "watchListHeader");
 		temperatureFlextable2.addStyleName("watchList");
-		//	    stocksFlexTable.getCellFormatter().addStyleName(0, 1, "watchListNumericColumn");
-		//	    stocksFlexTable.getCellFormatter().addStyleName(0, 2, "watchListNumericColumn");
+		//	    temperatureFlextable.getCellFormatter().addStyleName(0, 1, "watchListNumericColumn");
+		//	    temperatureFlextable.getCellFormatter().addStyleName(0, 2, "watchListNumericColumn");
 		temperatureFlextable2.getCellFormatter().addStyleName(0, 3, "watchListRemoveColumn");
 		temperatureFlextable2.getCellFormatter().addStyleName(0, 4, "watchListRemoveColumn");
 		//		PickupDragController dragController2 = new PickupDragController(RootPanel.get(),true);
@@ -400,6 +400,86 @@ public class TemperatureWatcher implements EntryPoint {
 
 	public void setCurrentPlaceNull() {
 		this.currentPlace=null;
+
+	}
+	
+	
+	private void initCities(){
+
+//		newCountryTextBox.setFocus(true);		    		
+
+		// Add the stock to the table.
+	
+//		stocks.add("KARLSKRONA");
+		temperatureFlextable.setText(1, 0, "SWEDEN");
+		temperatureFlextable.setText(1, 1, "BLEKINGE");
+		temperatureFlextable.setText(1, 2, "KARLSKRONA");
+		temperatureFlextable.setWidget(1, 4, new Label());
+		// Add a button to remove this stock from the table.
+				Button removeStockButton = new Button("x");
+				removeStockButton.addStyleDependentName("remove");
+				removeStockButton.addClickHandler(new ClickHandler() {
+					public void onClick(ClickEvent event) {
+//						int removedIndex = stocks.indexOf("KARLSKRONA");
+//						stocks.remove(removedIndex);
+//						temperatureFlextable.removeRow(removedIndex + 1);
+					}
+				});
+
+	temperatureFlextable.setWidget(1, 5, removeStockButton);		
+
+//		stocks.add("KIRUNA");
+		temperatureFlextable.setText(2, 0, "SWEDEN");
+		temperatureFlextable.setText(2, 1, "LAPPLAND");
+		temperatureFlextable.setText(2, 2, "KIRUNA");
+		temperatureFlextable.setWidget(2, 4, new Label());
+		// Add a button to remove this stock from the table.
+		Button removeStockButton2 = new Button("x");
+		removeStockButton2.addStyleDependentName("remove");
+		removeStockButton2.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+//				int removedIndex = stocks.indexOf("KIRUNA");
+//				stocks.remove(removedIndex);
+//				temperatureFlextable.removeRow(removedIndex + 1);
+			}
+		});
+
+		temperatureFlextable.setWidget(2, 5, removeStockButton2);		
+
+//		stocks.add("ORSA");
+		temperatureFlextable.setText(3, 0, "SWEDEN");
+		temperatureFlextable.setText(3, 1, "DALARNA");
+		temperatureFlextable.setText(3, 2, "ORSA");
+		temperatureFlextable.setWidget(3, 4, new Label());
+		// Add a button to remove this stock from the table.
+		Button removeStockButton3 = new Button("x");
+		removeStockButton3.addStyleDependentName("remove");
+		removeStockButton3.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+//				int removedIndex = stocks.indexOf("ORSA");
+//				stocks.remove(removedIndex);
+//				temperatureFlextable.removeRow(removedIndex + 1);
+			}
+		});
+
+		temperatureFlextable.setWidget(3, 5, removeStockButton2);	
+
+
+		for (int i=1; i<4; i++){
+			temperatureFlextable.getCellFormatter().addStyleName(i, 1, "watchListNumericColumn");
+			temperatureFlextable.getCellFormatter().addStyleName(i, 2, "watchListNumericColumn");
+			temperatureFlextable.getCellFormatter().addStyleName(i, 3, "watchListNumericColumn");
+			temperatureFlextable.getCellFormatter().addStyleName(i, 4, "watchListNumericColumn");
+			temperatureFlextable.getCellFormatter().addStyleName(i, 5, "watchListRemoveColumn");
+		}
+
+		
+		
+
+		// Get the stock price.
+		refreshWatchList();
+
+
 
 	}
 
