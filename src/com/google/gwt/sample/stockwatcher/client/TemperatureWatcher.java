@@ -35,7 +35,7 @@ public class TemperatureWatcher implements EntryPoint {
 	private HorizontalPanel labelPanel = new HorizontalPanel();
 //	private int temp;
 	private HorizontalPanel addPanel = new HorizontalPanel();
-	private TextBox newSymbolTextBox = new TextBox();
+	private TextBox newCountryTextBox = new TextBox();
 	private TextBox newCityTextBox = new TextBox();
 	private TextBox newAreaTextBox = new TextBox();
 	private Button addCityButton = new Button("Add");
@@ -88,10 +88,10 @@ public class TemperatureWatcher implements EntryPoint {
 		//	    temperatureFlextable.getCellFormatter().addStyleName(0, 2, "watchListNumericColumn");
 		temperatureFlextable.getCellFormatter().addStyleName(0, 3, "watchListRemoveColumn");
 		temperatureFlextable.getCellFormatter().addStyleName(0, 4, "watchListRemoveColumn");
-		newSymbolTextBox.setTitle("Country");
+		newCountryTextBox.setTitle("Country");
 		newAreaTextBox.setTitle("Region");
 		newCityTextBox.setTitle("City");
-		addPanel.add(newSymbolTextBox);
+		addPanel.add(newCountryTextBox);
 		addPanel.add(newAreaTextBox);
 		addPanel.add(newCityTextBox);
 
@@ -134,11 +134,13 @@ public class TemperatureWatcher implements EntryPoint {
 		mainPanel.add(addPanel);
 		mainPanel.add(temperatureFlextable2);
 		mainPanel.add(lastUpdatedLabel);
+		
+		
 
 		// Associate the Main panel with the HTML host page.
 		RootPanel.get("stockList").add(mainPanel);
 		// Move cursor focus to the input box.
-		newSymbolTextBox.setFocus(true);
+		newCountryTextBox.setFocus(true);
 
 		// Setup timer to refresh list automatically.
 		Timer refreshTimer = new Timer() {
@@ -156,7 +158,7 @@ public class TemperatureWatcher implements EntryPoint {
 			}
 		});
 		// Listen for keyboard events in the input box.
-		newSymbolTextBox.addKeyPressHandler(new KeyPressHandler() {
+		newCountryTextBox.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getCharCode() == KeyCodes.KEY_ENTER) {
 					addCity();
@@ -183,7 +185,7 @@ public class TemperatureWatcher implements EntryPoint {
 		RootPanel.get().getElement().getStyle().setPosition(Position.RELATIVE);
 //				RootPanel.get().add(mainPanel);
 			
-
+		initCities();
 	}
 
 	/**
@@ -191,19 +193,19 @@ public class TemperatureWatcher implements EntryPoint {
 	 * presses enter in the newSymbolTextBox.
 	 */
 	private void addCity() {
-		final String country = newSymbolTextBox.getText().toUpperCase().trim();
+		final String country = newCountryTextBox.getText().toUpperCase().trim();
 		final String city = newCityTextBox.getText().toUpperCase().trim();
 		final String area = newAreaTextBox.getText().toUpperCase().trim();
-		newSymbolTextBox.setFocus(true);
+		newCountryTextBox.setFocus(true);
 
 		// Stock code must be between 1 and 10 chars that are numbers, letters, or dots.
 		if (!country.matches("^[0-9A-ZÂ‰÷≈ƒ÷\\.]{1,10}$") || !city.matches("^[0-9A-ZÂ‰ˆ≈ƒ÷\\.]{1,10}$") || !area.matches("^[0-9A-ZÂ‰ˆ≈ƒ÷\\.]{1,10}$")) {
 			Window.alert("Some input is not correct");
-			newSymbolTextBox.selectAll();
+			newCountryTextBox.selectAll();
 			return;
 		}
 
-		newSymbolTextBox.setText("");
+		newCountryTextBox.setText("");
 		newAreaTextBox.setText("");
 		newCityTextBox.setText("");
 
@@ -405,80 +407,22 @@ public class TemperatureWatcher implements EntryPoint {
 	
 	
 	private void initCities(){
-
-//		newCountryTextBox.setFocus(true);		    		
-
-		// Add the stock to the table.
-	
-//		stocks.add("KARLSKRONA");
-		temperatureFlextable.setText(1, 0, "SWEDEN");
-		temperatureFlextable.setText(1, 1, "BLEKINGE");
-		temperatureFlextable.setText(1, 2, "KARLSKRONA");
-		temperatureFlextable.setWidget(1, 4, new Label());
-		// Add a button to remove this stock from the table.
-				Button removeStockButton = new Button("x");
-				removeStockButton.addStyleDependentName("remove");
-				removeStockButton.addClickHandler(new ClickHandler() {
-					public void onClick(ClickEvent event) {
-//						int removedIndex = stocks.indexOf("KARLSKRONA");
-//						stocks.remove(removedIndex);
-//						temperatureFlextable.removeRow(removedIndex + 1);
-					}
-				});
-
-	temperatureFlextable.setWidget(1, 5, removeStockButton);		
-
-//		stocks.add("KIRUNA");
-		temperatureFlextable.setText(2, 0, "SWEDEN");
-		temperatureFlextable.setText(2, 1, "LAPPLAND");
-		temperatureFlextable.setText(2, 2, "KIRUNA");
-		temperatureFlextable.setWidget(2, 4, new Label());
-		// Add a button to remove this stock from the table.
-		Button removeStockButton2 = new Button("x");
-		removeStockButton2.addStyleDependentName("remove");
-		removeStockButton2.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-//				int removedIndex = stocks.indexOf("KIRUNA");
-//				stocks.remove(removedIndex);
-//				temperatureFlextable.removeRow(removedIndex + 1);
-			}
-		});
-
-		temperatureFlextable.setWidget(2, 5, removeStockButton2);		
-
-//		stocks.add("ORSA");
-		temperatureFlextable.setText(3, 0, "SWEDEN");
-		temperatureFlextable.setText(3, 1, "DALARNA");
-		temperatureFlextable.setText(3, 2, "ORSA");
-		temperatureFlextable.setWidget(3, 4, new Label());
-		// Add a button to remove this stock from the table.
-		Button removeStockButton3 = new Button("x");
-		removeStockButton3.addStyleDependentName("remove");
-		removeStockButton3.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-//				int removedIndex = stocks.indexOf("ORSA");
-//				stocks.remove(removedIndex);
-//				temperatureFlextable.removeRow(removedIndex + 1);
-			}
-		});
-
-		temperatureFlextable.setWidget(3, 5, removeStockButton2);	
-
-
-		for (int i=1; i<4; i++){
-			temperatureFlextable.getCellFormatter().addStyleName(i, 1, "watchListNumericColumn");
-			temperatureFlextable.getCellFormatter().addStyleName(i, 2, "watchListNumericColumn");
-			temperatureFlextable.getCellFormatter().addStyleName(i, 3, "watchListNumericColumn");
-			temperatureFlextable.getCellFormatter().addStyleName(i, 4, "watchListNumericColumn");
-			temperatureFlextable.getCellFormatter().addStyleName(i, 5, "watchListRemoveColumn");
-		}
-
 		
 		
-
-		// Get the stock price.
-		refreshWatchList();
-
+		newCountryTextBox.setText("SWEDEN");
+		newAreaTextBox.setText("BLEKINGE");
+		newCityTextBox.setText("KARLSKRONA");
+		addCity();
+		
+		newCountryTextBox.setText("SWEDEN");
+		newAreaTextBox.setText("DALARNA");
+		newCityTextBox.setText("ORSA");
+		addCity();
+		
+		newCountryTextBox.setText("SWEDEN");
+		newAreaTextBox.setText("NORRBOTTEN");
+		newCityTextBox.setText("KIRUNA");
+		addCity();
 
 
 	}
