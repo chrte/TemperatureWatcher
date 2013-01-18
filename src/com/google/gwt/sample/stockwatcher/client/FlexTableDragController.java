@@ -19,6 +19,7 @@ final public class FlexTableDragController extends PickupDragController{
 
 	@Override
 	public void dragStart(){
+		
 		super.dragStart();  //TODO: Not working
 	}
 
@@ -32,7 +33,5 @@ final public class FlexTableDragController extends PickupDragController{
 		}
 		return proxy;
 	}
-	
-	
 
 }
