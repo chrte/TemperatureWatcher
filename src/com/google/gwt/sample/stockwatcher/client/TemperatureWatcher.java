@@ -33,6 +33,7 @@ public class TemperatureWatcher implements EntryPoint {
 	private VerticalPanel mainPanel = new VerticalPanel();
 	private FlexTable temperatureFlextable = new FlexTable();
 	private HorizontalPanel labelPanel = new HorizontalPanel();
+//	private int temp;
 	private HorizontalPanel addPanel = new HorizontalPanel();
 	private TextBox newSymbolTextBox = new TextBox();
 	private TextBox newCityTextBox = new TextBox();
