@@ -1,7 +1,6 @@
 package com.google.gwt.sample.stockwatcher.server;
 
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -9,7 +8,6 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -29,12 +27,15 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class TemperatureServiceImpl extends RemoteServiceServlet implements
 TemperatureService {
 
-	private static final double MAX_TEMP = 40;
-	private static final double MAX_CHANGE = 0.2;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Override
 
 	//TODO: Change so we fetch some nice data instead
 	public ArrayList<Temperature> getTemperatures(ArrayList<Temperature> listOfTemperatures) throws DelistedException {
+		DatabaseHandler dbHandler = new DatabaseHandler();
 		for (int i=0; i<listOfTemperatures.size(); i++) {
 			Calendar cal = Calendar.getInstance(); // creates calendar
 		    cal.setTime(new Date()); // sets calendar time/date
@@ -53,7 +54,7 @@ TemperatureService {
 		    cal.add(Calendar.HOUR_OF_DAY, +1);
 			listOfTemperatures.get(i).setNextUpdate(cal.getTime());
 			System.out.println("change is" + change);
-//			temps[i] = new Temperature(listOfTemperatures.get(i), tempFromXml, change);
+			dbHandler.setTemperature(listOfTemperatures.get(i).getCity(), temperature);
 		}
 
 		return listOfTemperatures;
