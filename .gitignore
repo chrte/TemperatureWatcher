@@ -23,6 +23,7 @@ gen/
 
 # Local configuration file (sdk path, etc)
 local.properties
+.classpath
 
 # gwt
 *.class
@@ -34,6 +35,7 @@ local.properties
 # gwt caches and compiled units #
 war/gwt_bree/
 gwt-unitCache/
+.gwt/*
 
 # boilerplate generated classes #
 .apt_generated/
