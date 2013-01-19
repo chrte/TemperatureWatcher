@@ -96,11 +96,12 @@ public class TemperatureWatcher implements EntryPoint {
 
 		initCities();
 		
-		// Setup timer to refresh list automatically.
+		// Setup timer to refresh list automatically. Refresh for the other table?
 				Timer refreshTimer = new Timer() {
 					@Override
 					public void run() {
-						refreshWatchList();
+						refreshWatchList(temperatureDnDFlextable,listOfTemperatures);
+						refreshWatchList(temperatureDnDFlextable2,listOfTemperatures2);
 					}
 				};
 				refreshTimer.scheduleRepeating(REFRESH_INTERVAL);
@@ -167,28 +168,28 @@ public class TemperatureWatcher implements EntryPoint {
 		// Listen for mouse events on the Add button.
 				addCityButton.addClickHandler(new ClickHandler() {
 					public void onClick(ClickEvent event) {
-						addCity(temperatureDnDFlextable);
+						addCity(temperatureDnDFlextable, listOfTemperatures);
 					}
 				});
 		// Listen for keyboard events in the input box.
 				newCountryTextBox.addKeyPressHandler(new KeyPressHandler() {
 					public void onKeyPress(KeyPressEvent event) {
 						if (event.getCharCode() == KeyCodes.KEY_ENTER) {
-							addCity(temperatureDnDFlextable);
+							addCity(temperatureDnDFlextable, listOfTemperatures);
 						}
 					}
 				});
 				newCityTextBox.addKeyPressHandler(new KeyPressHandler() {
 					public void onKeyPress(KeyPressEvent event) {
 						if (event.getCharCode() == KeyCodes.KEY_ENTER) {
-							addCity(temperatureDnDFlextable);
+							addCity(temperatureDnDFlextable,listOfTemperatures);
 						}
 					}
 				});
 				newAreaTextBox.addKeyPressHandler(new KeyPressHandler() {
 					public void onKeyPress(KeyPressEvent event) {
 						if (event.getCharCode() == KeyCodes.KEY_ENTER) {
-							addCity(temperatureDnDFlextable);
+							addCity(temperatureDnDFlextable,listOfTemperatures);
 						}
 					}
 				});
@@ -199,7 +200,7 @@ public class TemperatureWatcher implements EntryPoint {
 	 * Add stock to FlexTable. Executed when the user clicks the addStockButton or
 	 * presses enter in the newSymbolTextBox.
 	 */
-	private void addCity(final FlexTable temperatureDnDFlextable) {
+	private void addCity(final FlexTable temperatureDnDFlextableParam, final ArrayList<Temperature> listOfTemperaturesParam) {
 		final String country = newCountryTextBox.getText().toUpperCase().trim();
 		final String city = newCityTextBox.getText().toUpperCase().trim();
 		final String area = newAreaTextBox.getText().toUpperCase().trim();
@@ -219,34 +220,29 @@ public class TemperatureWatcher implements EntryPoint {
 
 		// Don't add the stock if it's already in the table.
 
-		for(int i = 0; i<listOfTemperatures.size(); i++){
-			if (listOfTemperatures.get(i).getCity().equals(city.toUpperCase())) return;  //can be improved, only compares the city, i.e two cities with the same name in defferent countries/region can't be added
-			
-		}
-		
-		for(int i = 0; i<listOfTemperatures2.size(); i++){
-			if (listOfTemperatures2.get(i).getCity().equals(city.toUpperCase())) return;  //can be improved, only compares the city, i.e two cities with the same name in defferent countries/region can't be added
+		for(int i = 0; i<listOfTemperaturesParam.size(); i++){
+			if (listOfTemperaturesParam.get(i).getCity().equals(city.toUpperCase())) return;  //can be improved, only compares the city, i.e two cities with the same name in defferent countries/region can't be added
 			
 		}
 		
 
 		// Add the stock to the table.
-		final int row = temperatureDnDFlextable.getRowCount();
+		final int row = temperatureDnDFlextableParam.getRowCount();   //flextable2??
 		Temperature tempTemp = new Temperature();
 		tempTemp.setArea(area);
 		tempTemp.setCity(city);
 		tempTemp.setCountry(country);
-		listOfTemperatures.add(tempTemp);
+		listOfTemperaturesParam.add(tempTemp);
 
 		//		temperatureFlextable.setText(row, 0, country);
 		HorizontalPanel countryPanel = new HorizontalPanel();
 		final Label countryLabel = new Label(country);
 		countryPanel.add(countryLabel);
-		temperatureDnDFlextable.setWidget(row, 0, countryPanel);
+		temperatureDnDFlextableParam.setWidget(row, 0, countryPanel);
 
 		HTML handle = new HTML(country);
 		handle.addStyleName("drag-handle");
-		temperatureDnDFlextable.setWidget(row, 0, handle);
+		temperatureDnDFlextableParam.setWidget(row, 0, handle);
 		tableDragController.makeDraggable(handle);
 
 
@@ -255,27 +251,21 @@ public class TemperatureWatcher implements EntryPoint {
 		HorizontalPanel areaPanel = new HorizontalPanel();
 		final Label areaLabel = new Label(area);
 		areaPanel.add(areaLabel);
-		temperatureDnDFlextable.setWidget(row, 1, areaPanel);
+		temperatureDnDFlextableParam.setWidget(row, 1, areaPanel);
 
 		HorizontalPanel cityPanel = new HorizontalPanel();
 		final Label cityLabel = new Label(city);
 		cityPanel.add(cityLabel);
-		temperatureDnDFlextable.setWidget(row, 2, cityPanel);
+		temperatureDnDFlextableParam.setWidget(row, 2, cityPanel);
 
 		//		temperatureFlextable.setWidget(row, 0, new Label(country));
 		//		temperatureFlextable.setWidget(row, 1, new Label(area));
 		//		temperatureFlextable.setWidget(row, 2, new Label(city));
-		temperatureDnDFlextable.setWidget(row, 4, new Label());
-		temperatureDnDFlextable.getCellFormatter().addStyleName(row, 3, "watchListNumericColumn");
-		temperatureDnDFlextable.getCellFormatter().addStyleName(row, 4, "watchListNumericColumn");
-		temperatureDnDFlextable.getCellFormatter().addStyleName(row, 5, "watchListRemoveColumn");
+		temperatureDnDFlextableParam.setWidget(row, 4, new Label());
+		temperatureDnDFlextableParam.getCellFormatter().addStyleName(row, 3, "watchListNumericColumn");
+		temperatureDnDFlextableParam.getCellFormatter().addStyleName(row, 4, "watchListNumericColumn");
+		temperatureDnDFlextableParam.getCellFormatter().addStyleName(row, 5, "watchListRemoveColumn");
 
-
-
-
-
-
-		
 
 		Button removeStockButton = new Button("x");
 		removeStockButton.addStyleDependentName("remove");
@@ -283,27 +273,25 @@ public class TemperatureWatcher implements EntryPoint {
 			public void onClick(ClickEvent event) { 
 				Boolean boo = false;
 				int removedIndex = 0;
-				for(removedIndex = 0; removedIndex<listOfTemperatures.size() && !boo ; removedIndex++){
-					if (listOfTemperatures.get(removedIndex).getCity().toUpperCase().equals(city.toUpperCase())) boo=true;  //can be improved, only compares the city, i.e two cities with the same name in defferent countries/region can't be added
+				for(removedIndex = 0; removedIndex<listOfTemperaturesParam.size() && !boo ; removedIndex++){  //listOfTemperature2???
+					if (listOfTemperaturesParam.get(removedIndex).getCity().toUpperCase().equals(city.toUpperCase())) boo=true;  //can be improved, only compares the city, i.e two cities with the same name in defferent countries/region can't be added
 				}
 				removedIndex--;
-				listOfTemperatures.remove(removedIndex);
-				temperatureDnDFlextable.removeRow(removedIndex+1);
+				listOfTemperaturesParam.remove(removedIndex);
+				temperatureDnDFlextableParam.removeRow(removedIndex+1);
 			}
 		});
-		temperatureDnDFlextable.setWidget(row, 5, removeStockButton);
+		temperatureDnDFlextableParam.setWidget(row, 5, removeStockButton);
 
 		//gets the stock price
 
-		refreshWatchList();
+		refreshWatchList(temperatureDnDFlextableParam, listOfTemperaturesParam);
 
 		
-
-
-
 	}
 
-	private void refreshWatchList() {
+	private void refreshWatchList(final FlexTable temperatureDnDFlextableParam, final ArrayList<Temperature> listOfTemperaturesParam) {
+	
 		// Initialize the service proxy.
 		if (temperaturesSvc == null) {
 			temperaturesSvc = GWT.create(TemperatureService.class);
@@ -325,23 +313,25 @@ public class TemperatureWatcher implements EntryPoint {
 
 			@Override
 			public void onSuccess(ArrayList<Temperature> result) {
-				listOfTemperatures=result;
-				updateTable(result);
+				if (listOfTemperaturesParam.equals(listOfTemperatures)) listOfTemperatures = result;
+				else listOfTemperatures2 = result;
+				
+				updateTable(result, temperatureDnDFlextableParam, listOfTemperaturesParam);
 
 			}
 		};
 
 		// Make the call to the stock price service.
 
-		temperaturesSvc.getTemperatures(listOfTemperatures, callback); // we need to pares the region and country
+		temperaturesSvc.getTemperatures(listOfTemperaturesParam, callback); 
 
 	}
 
 
-	private void updateTable(ArrayList<Temperature> result) {
+	private void updateTable(ArrayList<Temperature> result, FlexTable temperatureDnDFlextableParam, ArrayList<Temperature> listOfTemperaturesParam) {
 		
 		for (int i = 0; i < result.size(); i++) {
-			updateTable(result.get(i));
+			updateTable(result.get(i), temperatureDnDFlextableParam, listOfTemperaturesParam);
 		}
 		// Display timestamp showing last refresh.
 		lastUpdatedLabel.setText("Last update : "
@@ -354,15 +344,16 @@ public class TemperatureWatcher implements EntryPoint {
 	 *
 	 * @param price Stock data for a single row.
 	 */
-	private void updateTable(Temperature temperature) {
+	private void updateTable(Temperature temperature, FlexTable temperatureDnDFlextableParam, ArrayList<Temperature> listOfTemperaturesParam) {
 		// Make sure the stock is still in the stock table.
 		Boolean boo = false;
 		int row = 0;
 		
-			for(row = 0; row<listOfTemperatures.size() && !boo ; row++){
-				if (listOfTemperatures.get(row).getCity().toUpperCase().equals(temperature.getCity().toUpperCase())) boo=true;  //can be improved, only compares the city, i.e two cities with the same name in defferent countries/region can't be added
+			for(row = 0; row<listOfTemperaturesParam.size() && !boo ; row++){
+				if (listOfTemperaturesParam.get(row).getCity().toUpperCase().equals(temperature.getCity().toUpperCase())) boo=true;  //can be improved, only compares the city, i.e two cities with the same name in defferent countries/region can't be added
 			}
 			if (!boo) return;	
+//			row--; //TODO, correct?
 	
 
 		// Format the data in the Price and Change fields.
@@ -375,9 +366,10 @@ public class TemperatureWatcher implements EntryPoint {
 		if (changePercentText==null) changePercentText ="";
 		
 		// Populate the Price and Change fields with new data.
-		temperatureDnDFlextable.setText(row, 3, tempText);
-		Label changeWidget = (Label)temperatureDnDFlextable.getWidget(row, 4);
-		changeWidget.setText(changeText + " (" + changePercentText + "%)");
+		
+		temperatureDnDFlextableParam.setText(row, 3, tempText);
+		Label changeWidget = (Label)temperatureDnDFlextableParam.getWidget(row, 4);
+		changeWidget.setText(changeText + " (" + changePercentText + "%)"); 
 		
 		// Change the color of text in the Change field based on its value.
 		String changeStyleName = "noChange";
@@ -410,17 +402,17 @@ public class TemperatureWatcher implements EntryPoint {
 		newCountryTextBox.setText("SWEDEN");
 		newAreaTextBox.setText("BLEKINGE");
 		newCityTextBox.setText("KARLSKRONA");
-		addCity(temperatureDnDFlextable);
+		addCity(temperatureDnDFlextable, listOfTemperatures);
 
 		newCountryTextBox.setText("SWEDEN");
 		newAreaTextBox.setText("DALARNA");
 		newCityTextBox.setText("ORSA");
-		addCity(temperatureDnDFlextable);
+		addCity(temperatureDnDFlextable, listOfTemperatures);
 
 		newCountryTextBox.setText("SWEDEN");
 		newAreaTextBox.setText("NORRBOTTEN");
 		newCityTextBox.setText("KIRUNA");
-		addCity(temperatureDnDFlextable2);
+		addCity(temperatureDnDFlextable2,listOfTemperatures2);
 
 
 	}
