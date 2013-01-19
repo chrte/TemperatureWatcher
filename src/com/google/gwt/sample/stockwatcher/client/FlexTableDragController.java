@@ -10,9 +10,16 @@ import com.google.gwt.user.client.ui.FlexTable;
 
 
 
+
 public final class FlexTableDragController extends PickupDragController{
 	
 	 private static final String CSS_DEMO_FLEX_TABLE_ROW_EXAMPLE_TABLE_PROXY = "demo-FlexTableRowExample-table-proxy";
+
+	@Override
+	public void dragStart(){
+		
+		super.dragStart();  
+	}
 
 	  private FlexTable draggableTable;
 
@@ -86,5 +93,6 @@ public final class FlexTableDragController extends PickupDragController{
 
 	
 	
+
 
 }
