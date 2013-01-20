@@ -30,8 +30,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  *
  */
 
-public class TemperatureServiceImpl extends RemoteServiceServlet implements
-TemperatureService {
+public class TemperatureServiceImpl extends RemoteServiceServlet implements TemperatureService {
 
 	/**
 	 * 
