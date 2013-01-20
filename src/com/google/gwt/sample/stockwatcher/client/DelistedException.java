@@ -4,7 +4,11 @@ import java.io.Serializable;
 
 public class DelistedException extends Exception implements Serializable {
 
-  private String symbol;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+private String symbol;
 
   public DelistedException() {
   }
