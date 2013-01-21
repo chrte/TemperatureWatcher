@@ -63,7 +63,9 @@ public class TemperatureServiceImpl extends RemoteServiceServlet implements Temp
 			listOfTemperatures.get(i).setNextUpdate(cal.getTime());
 
 			System.out.println("change is" + change);
+			dbHandler.initiateCity(listOfTemperatures.get(i).getCountry(), listOfTemperatures.get(i).getArea(), listOfTemperatures.get(i).getCity());
 			dbHandler.setTemperature(listOfTemperatures.get(i).getCity(), temperature);
+			
 
 		}
 
