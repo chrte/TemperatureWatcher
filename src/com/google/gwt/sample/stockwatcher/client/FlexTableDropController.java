@@ -94,11 +94,11 @@ public class FlexTableDropController extends AbstractPositioningDropController  
 		        context.mouseX, context.mouseY), LocationWidgetComparator.BOTTOM_HALF_COMPARATOR) - 1;
 
 		    if (flexTable.getRowCount() > 0) {
-		      Widget w = flexTable.getWidget(targetRow == -1 ? 0 : targetRow, 0);
+		      Widget w = flexTable.getWidget(targetRow == -1 ? 0 : targetRow, 0);  //TODO, cause of the nullpointer, w can be null
 		      Location widgetLocation = new WidgetLocation(w, context.boundaryPanel);
 		      Location tableLocation = new WidgetLocation(flexTable, context.boundaryPanel);
 		      context.boundaryPanel.add(positioner, tableLocation.getLeft(), widgetLocation.getTop()
-		          + (targetRow == -1 ? 0 : w.getOffsetHeight()));
+		          + (targetRow == -1 ? 0 : w.getOffsetHeight()));  //TODO: fix nullpointer exception here
 		    }
 		  }
 
