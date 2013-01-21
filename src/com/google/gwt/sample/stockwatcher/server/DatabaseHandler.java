@@ -17,6 +17,9 @@ public class DatabaseHandler {
 	private static final String IP ="192.168.1.100"; //may change to 192.168.1.100 if working local from @christians home, else chrte.dyndns.org
 	private static final String DATABASENAME ="TDDD24";
 	private static final String TABLENAME = "temperatures";
+	private static final String IDCOLUMN = "temperatureId";
+	private static final String COUNTRYCOLUMN = "country";
+	private static final String AREACOLUMN ="area";
 	private static final String CITYCOLUMN = "city";
 	private static final String TEMPERATURECOLUMN = "temperature";
 	private static final String USERNAME="TDDD24";
@@ -66,7 +69,6 @@ public class DatabaseHandler {
 	public void setTemperature(String city,double temperature){
 
 		try {
-
 			java.sql.Statement stmt=null;
 			stmt =connection.createStatement();
 			if (stmt.executeUpdate("UPDATE "+DATABASENAME+"."+TABLENAME+" SET "+TEMPERATURECOLUMN+"="+temperature+ " WHERE "+CITYCOLUMN+"='"+city+"';")==0) {
@@ -76,6 +78,42 @@ public class DatabaseHandler {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Creates the row for the given combination of country, area ,and city
+	 * Won't insert if the set is already in the table
+	 * @param country The country to be inserted
+	 * @param area The area
+	 * @param city The city
+	 */
+	public void initiateCity(String country, String area, String city){
+		try {
+			java.sql.Statement stmt=null;
+			stmt =connection.createStatement();
+			stmt.executeUpdate("INSERT IGNORE INTO "+DATABASENAME+"."+TABLENAME+" VALUES (NULL, '"+country+"','"+area+"','"+city+"',NULL);");
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Functions for deleting a city from the db
+	 * @param city The city to be  deleted
+	 */
+	public void deleteCity(String city){
+		try {
+			java.sql.Statement stmt=null;
+			stmt =connection.createStatement();
+			stmt.executeUpdate("DELETE FROM "+DATABASENAME+"."+TABLENAME+" WHERE "+CITYCOLUMN+"='"+city+"';");
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }
 
