@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 public class DatabaseHandler {
 
-	private static final String IP ="192.168.1.100"; //may change to 192.168.1.100 if working local from @christians home, else chrte.dyndns.org
+	private static final String IP ="chrte.dyndns.org"; //may change to 192.168.1.100 if working local from @christians home, else chrte.dyndns.org
 	private static final String DATABASENAME ="TDDD24";
 	private static final String TABLENAME = "temperatures";
 	@SuppressWarnings("unused")
