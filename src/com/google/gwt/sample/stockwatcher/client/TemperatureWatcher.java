@@ -56,7 +56,7 @@ public class TemperatureWatcher implements EntryPoint {
 	private void createDnDFlexTables() {
 
 		absolutePanel = new AbsolutePanel();
-		absolutePanel.setPixelSize(550, 400);
+		absolutePanel.setPixelSize(850, 800);
 		RootPanel.get("stockList").add(absolutePanel);
 
 		final DragHandler demoDragHandler = new DragHandlerAdapter();
@@ -88,38 +88,47 @@ public class TemperatureWatcher implements EntryPoint {
 
 	}
 
+	/**
+	 * Creates the basic layout along with some listeners on functionality
+	 */
+	
 	private void createLayout() {
-		
+
+		// Add the Widgets
+		newCountryTextBox.setTitle("Country");
+		newAreaTextBox.setTitle("Region");
+		newCityTextBox.setTitle("City");
+
+		addPanel.add(newCountryTextBox);
+		addPanel.add(newAreaTextBox);
+		addPanel.add(newCityTextBox);
+		addPanel.add(addCityButton);
+		addPanel.addStyleName("addPanel");
+
+		errorMsgLabel.setStyleName("errorMessage");
+		errorMsgLabel.setVisible(false);
+
+
+
+		//Creates the first FlexTable
 		HTML handle = new HTML("Country");
 		handle.addStyleName("drag-handle");
-		temperatureDnDFlextable.setWidget(0, 0, handle);
-
-		
+		temperatureDnDFlextable.setWidget(0, 0, handle);		
 		temperatureDnDFlextable.setText(0, 1, "Area");
 		temperatureDnDFlextable.setText(0, 2, "City");
 		temperatureDnDFlextable.setText(0, 3, "Temp");
 		temperatureDnDFlextable.setText(0, 4, "Change");
 		temperatureDnDFlextable.setText(0, 5, "Remove");
 		temperatureDnDFlextable.setCellPadding(6);
+
+
 		// Add styles to elements in the stock list table.
 		temperatureDnDFlextable.getRowFormatter().addStyleName(0, "watchListHeader");
 		temperatureDnDFlextable.addStyleName("watchList");	
 		temperatureDnDFlextable.getCellFormatter().addStyleName(0, 3, "watchListRemoveColumn");
 		temperatureDnDFlextable.getCellFormatter().addStyleName(0, 4, "watchListRemoveColumn");
-		newCountryTextBox.setTitle("Country");
-		newAreaTextBox.setTitle("Region");
-		newCityTextBox.setTitle("City");
-		addPanel.add(newCountryTextBox);
-		addPanel.add(newAreaTextBox);
-		addPanel.add(newCityTextBox);
 
-		addPanel.add(addCityButton);
-		addPanel.addStyleName("addPanel");
-		errorMsgLabel.setStyleName("errorMessage");
-		errorMsgLabel.setVisible(false);
-		//part 2
-		//Create table for stock data.
-		
+		//Creates the second FlexTable
 		HTML handle2 = new HTML("Country");
 		handle.addStyleName("drag-handle");
 		temperatureDnDFlextable2.setWidget(0, 0, handle2);
@@ -129,14 +138,14 @@ public class TemperatureWatcher implements EntryPoint {
 		temperatureDnDFlextable2.setText(0, 4, "Change");
 		temperatureDnDFlextable2.setText(0, 5, "Remove");
 		temperatureDnDFlextable2.setCellPadding(6);
+
 		// Add styles to elements in the stock list table.
 		temperatureDnDFlextable2.getRowFormatter().addStyleName(0, "watchListHeader");
 		temperatureDnDFlextable2.addStyleName("watchList");
-		//	    temperatureFlextable.getCellFormatter().addStyleName(0, 1, "watchListNumericColumn");
-		//	    temperatureFlextable.getCellFormatter().addStyleName(0, 2, "watchListNumericColumn");
 		temperatureDnDFlextable2.getCellFormatter().addStyleName(0, 3, "watchListRemoveColumn");
 		temperatureDnDFlextable2.getCellFormatter().addStyleName(0, 4, "watchListRemoveColumn");
 
+		// Add the Widgets to the absolutePanel
 		absolutePanel.add(errorMsgLabel);
 		absolutePanel.add(temperatureDnDFlextable);			
 		absolutePanel.add(addPanel);
@@ -146,34 +155,35 @@ public class TemperatureWatcher implements EntryPoint {
 
 
 		// Associate the Main panel with the HTML host page.
-
 		RootPanel.get().add(mainPanel);
+		
+		//Adding some listeners
 
 		// Listen for mouse events on the Add button.
 		addCityButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				addCity(temperatureDnDFlextable, listOfTemperatures); 
+				listOfTemperatures = addCity(temperatureDnDFlextable, listOfTemperatures); 
 			}
 		});
 		// Listen for keyboard events in the input box.
 		newCountryTextBox.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getCharCode() == KeyCodes.KEY_ENTER) {
-					addCity(temperatureDnDFlextable, listOfTemperatures);
+					listOfTemperatures= addCity(temperatureDnDFlextable, listOfTemperatures);
 				}
 			}
 		});
 		newCityTextBox.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getCharCode() == KeyCodes.KEY_ENTER) {
-					addCity(temperatureDnDFlextable,listOfTemperatures);
+					listOfTemperatures = addCity(temperatureDnDFlextable,listOfTemperatures);
 				}
 			}
 		});
 		newAreaTextBox.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getCharCode() == KeyCodes.KEY_ENTER) {
-					addCity(temperatureDnDFlextable,listOfTemperatures);
+					listOfTemperatures = addCity(temperatureDnDFlextable,listOfTemperatures);
 				}
 			}
 		});
@@ -184,7 +194,7 @@ public class TemperatureWatcher implements EntryPoint {
 	 * Add stock to FlexTable. Executed when the user clicks the addStockButton or
 	 * presses enter in the newSymbolTextBox.
 	 */
-	private void addCity(final FlexTable temperatureDnDFlextableParam, final ArrayList<Temperature> listOfTemperaturesParam) {
+	private ArrayList<Temperature> addCity(final FlexTable temperatureDnDFlextableParam, final ArrayList<Temperature> listOfTemperaturesParam) {
 		final String country = newCountryTextBox.getText().toUpperCase().trim();
 		final String city = newCityTextBox.getText().toUpperCase().trim();
 		final String area = newAreaTextBox.getText().toUpperCase().trim();
@@ -194,31 +204,33 @@ public class TemperatureWatcher implements EntryPoint {
 		if (!country.matches("^[0-9A-ZÂ‰÷≈ƒ÷\\.]{1,10}$") || !city.matches("^[0-9A-ZÂ‰ˆ≈ƒ÷\\.]{1,10}$") || !area.matches("^[0-9A-ZÂ‰ˆ≈ƒ÷\\.]{1,10}$")) {
 			Window.alert("Some input is not correct");
 			newCountryTextBox.selectAll();
-			return;
+			return listOfTemperaturesParam;
 		}
 
 		newCountryTextBox.setText("");
 		newAreaTextBox.setText("");
 		newCityTextBox.setText("");
 
-
+		//Checks if the city is already in the flextable
 		for(int i = 0; i<listOfTemperaturesParam.size(); i++){
-			if (listOfTemperaturesParam.get(i).getCity().equals(city.toUpperCase())) return;  //can be improved, only compares the city, i.e two cities with the same name in defferent countries/region can't be added
+			if (listOfTemperaturesParam.get(i).getCity().equals(city.toUpperCase())) return listOfTemperaturesParam;
 		}
-
+		
+		//Adds the new city to the flextable
+		
 		final int row = temperatureDnDFlextableParam.getRowCount(); 
 		Temperature tempTemp = new Temperature();
 		tempTemp.setArea(area);
 		tempTemp.setCity(city);
 		tempTemp.setCountry(country);
 		listOfTemperaturesParam.add(tempTemp);
-
-		//		temperatureFlextable.setText(row, 0, country);
+		
 		HorizontalPanel countryPanel = new HorizontalPanel();
 		final Label countryLabel = new Label(country);
 		countryPanel.add(countryLabel);
 		temperatureDnDFlextableParam.setWidget(row, 0, countryPanel);
 
+		//Creates a draghandel for the country
 		HTML handle = new HTML(country);
 		handle.addStyleName("drag-handle");
 		temperatureDnDFlextableParam.setWidget(row, 0, handle);
@@ -234,32 +246,35 @@ public class TemperatureWatcher implements EntryPoint {
 		cityPanel.add(cityLabel);
 		temperatureDnDFlextableParam.setWidget(row, 2, cityPanel);
 
-		//		temperatureFlextable.setWidget(row, 0, new Label(country));
-		//		temperatureFlextable.setWidget(row, 1, new Label(area));
-		//		temperatureFlextable.setWidget(row, 2, new Label(city));
+		
 		temperatureDnDFlextableParam.setWidget(row, 4, new Label());
 		temperatureDnDFlextableParam.getCellFormatter().addStyleName(row, 3, "watchListNumericColumn");
 		temperatureDnDFlextableParam.getCellFormatter().addStyleName(row, 4, "watchListNumericColumn");
 		temperatureDnDFlextableParam.getCellFormatter().addStyleName(row, 5, "watchListRemoveColumn");
 
+		//Adds a remove button with a listener
 		Button removeStockButton = new Button("x");
 		removeStockButton.addStyleDependentName("remove");
 		removeStockButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) { 
 				Boolean boo = false;
 				int removedIndex = 0;
-				for(removedIndex = 0; removedIndex<listOfTemperaturesParam.size() && !boo ; removedIndex++){  //listOfTemperature2???
-					if (listOfTemperaturesParam.get(removedIndex).getCity().toUpperCase().equals(city.toUpperCase())) boo=true;  //can be improved, only compares the city, i.e two cities with the same name in defferent countries/region can't be added
+				for(removedIndex = 0; removedIndex<listOfTemperaturesParam.size() && !boo ; removedIndex++){  
+					if (listOfTemperaturesParam.get(removedIndex).getCity().toUpperCase().equals(city.toUpperCase())) boo=true;  
 				}
 				listOfTemperaturesParam.remove(removedIndex-1);
+								
 				temperatureDnDFlextableParam.removeRow(removedIndex);
 			}
 		});
 		temperatureDnDFlextableParam.setWidget(row, 5, removeStockButton);
 
 		refreshWatchList(temperatureDnDFlextableParam, listOfTemperaturesParam);
+		return listOfTemperaturesParam;
 	}
 
+	
+	
 	private void refreshWatchList(final FlexTable temperatureDnDFlextableParam, final ArrayList<Temperature> listOfTemperaturesParam) {
 
 		// Initialize the service proxy.
@@ -358,22 +373,22 @@ public class TemperatureWatcher implements EntryPoint {
 	}
 
 	private void initCities(){
-//
-//
-//		newCountryTextBox.setText("SWEDEN");
-//		newAreaTextBox.setText("BLEKINGE");
-//		newCityTextBox.setText("KARLSKRONA");
-//		addCity(temperatureDnDFlextable, listOfTemperatures);
-//
-//		newCountryTextBox.setText("SWEDEN");
-//		newAreaTextBox.setText("DALARNA");
-//		newCityTextBox.setText("ORSA");
-//		addCity(temperatureDnDFlextable, listOfTemperatures);
-//
+		//
+		//
+		//		newCountryTextBox.setText("SWEDEN");
+		//		newAreaTextBox.setText("BLEKINGE");
+		//		newCityTextBox.setText("KARLSKRONA");
+		//		addCity(temperatureDnDFlextable, listOfTemperatures);
+		//
+		//		newCountryTextBox.setText("SWEDEN");
+		//		newAreaTextBox.setText("DALARNA");
+		//		newCityTextBox.setText("ORSA");
+		//		addCity(temperatureDnDFlextable, listOfTemperatures);
+		//
 		newCountryTextBox.setText("SWEDEN");
 		newAreaTextBox.setText("NORRBOTTEN");
 		newCityTextBox.setText("KIRUNA");
-		addCity(temperatureDnDFlextable2,listOfTemperatures2);
+		listOfTemperatures2 = addCity(temperatureDnDFlextable2,listOfTemperatures2);
 
 
 	}
