@@ -67,7 +67,7 @@ public class TemperatureWatcher implements EntryPoint {
 		temperatureDnDFlextable = new FlexTable();
 		temperatureDnDFlextable2 = new FlexTable();
 
-		doStuff();
+		createLayout();
 
 		FlexTableDropController flexTableDropController1 = new FlexTableDropController(temperatureDnDFlextable);
 		FlexTableDropController flexTableDropController2 = new FlexTableDropController(temperatureDnDFlextable2);
@@ -88,8 +88,13 @@ public class TemperatureWatcher implements EntryPoint {
 
 	}
 
-	private void doStuff() {
-		temperatureDnDFlextable.setText(0, 0, "Country");
+	private void createLayout() {
+		
+		HTML handle = new HTML("Country");
+		handle.addStyleName("drag-handle");
+		temperatureDnDFlextable.setWidget(0, 0, handle);
+
+		
 		temperatureDnDFlextable.setText(0, 1, "Area");
 		temperatureDnDFlextable.setText(0, 2, "City");
 		temperatureDnDFlextable.setText(0, 3, "Temp");
@@ -114,7 +119,10 @@ public class TemperatureWatcher implements EntryPoint {
 		errorMsgLabel.setVisible(false);
 		//part 2
 		//Create table for stock data.
-		temperatureDnDFlextable2.setText(0, 0, "Country");
+		
+		HTML handle2 = new HTML("Country");
+		handle.addStyleName("drag-handle");
+		temperatureDnDFlextable2.setWidget(0, 0, handle2);
 		temperatureDnDFlextable2.setText(0, 1, "Area");
 		temperatureDnDFlextable2.setText(0, 2, "City");
 		temperatureDnDFlextable2.setText(0, 3, "Temp");
