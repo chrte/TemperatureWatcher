@@ -35,7 +35,7 @@ public class TemperatureServiceImpl extends RemoteServiceServlet implements Temp
 
 
 	private static final long serialVersionUID = 1L;
-//	DatabaseHandler dbHandler = new DatabaseHandler();
+	DatabaseHandler dbHandler = new DatabaseHandler();
 	@Override
 
 	/**
@@ -62,21 +62,21 @@ public class TemperatureServiceImpl extends RemoteServiceServlet implements Temp
 			listOfTemperatures.get(i).setNextUpdate(cal.getTime());
 
 			System.out.println("change is" + change);
-//			dbHandler.initiateCity(listOfTemperatures.get(i).getCountry(), listOfTemperatures.get(i).getArea(), listOfTemperatures.get(i).getCity());
-//			dbHandler.setTemperature(listOfTemperatures.get(i).getCity(), temperature);			
+			dbHandler.initiateCity(listOfTemperatures.get(i).getCountry(), listOfTemperatures.get(i).getArea(), listOfTemperatures.get(i).getCity());
+			dbHandler.setTemperature(listOfTemperatures.get(i).getCity(), temperature);			
 		}
 		return listOfTemperatures;
 	}
 	
 	public void changArea(Temperature temperature, String oldArea){
-//		dbHandler.changeAreaName(temperature.getCity(), oldArea);
+		dbHandler.changeAreaName(temperature.getCity(), oldArea);
 	}
 	
 	public void changeCountry(Temperature temperature, String oldCountry){
-//		dbHandler.changeCountryName(temperature.getCountry(), oldCountry);
+		dbHandler.changeCountryName(temperature.getCountry(), oldCountry);
 	}
 	public void changeCity(Temperature temperature, String oldCity){
-//		dbHandler.changeCityName(temperature.getCity(), oldCity);
+		dbHandler.changeCityName(temperature.getCity(), oldCity);
 	}
 	/**
 	 * Private function for fetching weather data from yr.no, 
