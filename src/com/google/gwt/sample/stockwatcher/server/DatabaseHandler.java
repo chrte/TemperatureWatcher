@@ -17,6 +17,7 @@ public class DatabaseHandler {
 	private static final String IP ="192.168.1.100"; //may change to 192.168.1.100 if working local from @christians home, else chrte.dyndns.org
 	private static final String DATABASENAME ="TDDD24";
 	private static final String TABLENAME = "temperatures";
+	@SuppressWarnings("unused")
 	private static final String IDCOLUMN = "temperatureId";
 	private static final String COUNTRYCOLUMN = "country";
 	private static final String AREACOLUMN ="area";
@@ -31,7 +32,7 @@ public class DatabaseHandler {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			connection  = DriverManager.getConnection("jdbc:mysql://"+IP+"/"+DATABASENAME,USERNAME,PASSWORD);
 			connection.setAutoCommit(true);
-			} catch (Exception e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -50,15 +51,15 @@ public class DatabaseHandler {
 			stmt = connection.createStatement();
 			rs = stmt.executeQuery("SELECT "+TEMPERATURECOLUMN+" FROM " +DATABASENAME+"."+TABLENAME+" WHERE "+CITYCOLUMN+"='"+city+"';");
 			while (rs.next()){
-			return rs.getDouble(TEMPERATURECOLUMN);
+				return rs.getDouble(TEMPERATURECOLUMN);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return -273; //TODO, fix better error handling
-		
+
 	}
 
 	/**
@@ -72,14 +73,14 @@ public class DatabaseHandler {
 			java.sql.Statement stmt=null;
 			stmt =connection.createStatement();
 			if (stmt.executeUpdate("UPDATE "+DATABASENAME+"."+TABLENAME+" SET "+TEMPERATURECOLUMN+"="+temperature+ " WHERE "+CITYCOLUMN+"='"+city+"';")==0) {
-			stmt.executeUpdate("INSERT INTO "+DATABASENAME+"."+TABLENAME+" (`"+CITYCOLUMN+"`, `"+TEMPERATURECOLUMN+"`) VALUES ('"+city+"', "+temperature+");");
+				stmt.executeUpdate("INSERT INTO "+DATABASENAME+"."+TABLENAME+" (`"+CITYCOLUMN+"`, `"+TEMPERATURECOLUMN+"`) VALUES ('"+city+"', "+temperature+");");
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Creates the row for the given combination of country, area ,and city
 	 * Won't insert if the set is already in the table
@@ -92,13 +93,13 @@ public class DatabaseHandler {
 			java.sql.Statement stmt=null;
 			stmt =connection.createStatement();
 			stmt.executeUpdate("INSERT IGNORE INTO "+DATABASENAME+"."+TABLENAME+" VALUES (NULL, '"+country+"','"+area+"','"+city+"',NULL);");
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Functions for deleting a city from the db
 	 * @param city The city to be  deleted
@@ -108,12 +109,61 @@ public class DatabaseHandler {
 			java.sql.Statement stmt=null;
 			stmt =connection.createStatement();
 			stmt.executeUpdate("DELETE FROM "+DATABASENAME+"."+TABLENAME+" WHERE "+CITYCOLUMN+"='"+city+"';");
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
+	}
+
+	/**
+	 * Method for change city name
+	 * @param newCity
+	 * @param oldCity
+	 */
+	public void changeCityName(String newCity, String oldCity){
+		try {
+			java.sql.Statement stmt=null;
+			stmt =connection.createStatement();
+			stmt.executeUpdate("UPDATE "+DATABASENAME+"."+TABLENAME+" SET "+CITYCOLUMN+"='"+newCity+"' WHERE "+CITYCOLUMN+"='"+oldCity+"';");
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * Method for chaning a area name
+	 * @param newArea
+	 * @param oldArea
+	 */
+	public void changeAreaName(String newArea, String oldArea){
+		try {
+			java.sql.Statement stmt=null;
+			stmt =connection.createStatement();
+			stmt.executeUpdate("UPDATE "+DATABASENAME+"."+TABLENAME+" SET "+AREACOLUMN+"='"+newArea+"' WHERE "+AREACOLUMN+"='"+oldArea+"';");
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * Method for changing a countryname
+	 * @param newCountry
+	 * @param oldCountry
+	 */
+	public void changeCountryName(String newCountry, String oldCountry){
+		try {
+			java.sql.Statement stmt=null;
+			stmt =connection.createStatement();
+			stmt.executeUpdate("UPDATE "+DATABASENAME+"."+TABLENAME+" SET "+COUNTRYCOLUMN+"='"+newCountry+"' WHERE "+CITYCOLUMN+"='"+oldCountry+"';");
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
 
