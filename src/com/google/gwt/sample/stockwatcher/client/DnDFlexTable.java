@@ -29,5 +29,21 @@ public class DnDFlexTable extends FlexTable {
 	public void setListOfTemperatures(ArrayList<Temperature> listOfTemperatures) {
 		this.listOfTemperatures = listOfTemperatures;
 	}
+	
+	public int findIndexOfCity(String city){
+		int index = -1;
+		boolean boo = false;
+		
+		for(int i = 0; i<this.listOfTemperatures.size() && !boo ; i++){
+			if(this.listOfTemperatures.get(i).getCity().equals(city)){
+				index = i;
+				boo = true;
+			}
+		}
+		
+		return index;
+		
+	}
+	
 
 }

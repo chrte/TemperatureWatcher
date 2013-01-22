@@ -8,7 +8,6 @@ import com.allen_sauer.gwt.dnd.client.util.DOMUtil;
 import com.allen_sauer.gwt.dnd.client.util.Location;
 import com.allen_sauer.gwt.dnd.client.util.LocationWidgetComparator;
 import com.allen_sauer.gwt.dnd.client.util.WidgetLocation;
-import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.InsertPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -24,7 +23,7 @@ public class FlexTableDropController extends AbstractPositioningDropController  
 	private TemperatureWatcher parent;
 
 	private static final String CSS_DEMO_TABLE_POSITIONER = "demo-table-positioner";
-	private FlexTable flexTable;
+	private DnDFlexTable flexTable;
 	private InsertPanel flexTableRowsAsIndexPanel = new InsertPanel() {
 
 		@Override
@@ -61,7 +60,7 @@ public class FlexTableDropController extends AbstractPositioningDropController  
 	private Widget positioner = null;
 	private int targetRow;
 	
-	public FlexTableDropController(FlexTable flexTable) {
+	public FlexTableDropController(DnDFlexTable flexTable) {
 		super(flexTable);
 		this.flexTable = flexTable;
 	}
@@ -72,8 +71,25 @@ public class FlexTableDropController extends AbstractPositioningDropController  
 		if(targetRow==-1){
 			targetRow=0;
 		}
+		//Moves the city to the correct temperatureList
+		String country =  trDragController.getDraggableTable().getText(trDragController.getDragRow(), 0);
+		String area =  trDragController.getDraggableTable().getText(trDragController.getDragRow(), 1);
+		String city =  trDragController.getDraggableTable().getText(trDragController.getDragRow(), 2);
+		Temperature temperature = new Temperature(country, area, city);
+		this.flexTable.addTemperature(temperature);		
+		int index = trDragController.getDraggableTable().findIndexOfCity(city);
+		trDragController.getDraggableTable().removeTemperature(index);
+		
+		
+		//Moves the city to another Flextable
 		FlexTableUtil.moveRow(trDragController.getDraggableTable(), flexTable,
 				trDragController.getDragRow(), targetRow + 1);
+		
+		//Adding the styles
+		this.flexTable.getCellFormatter().addStyleName(targetRow+1, 3, "watchListNumericColumn");
+		this.flexTable.getCellFormatter().addStyleName(targetRow+1, 4, "watchListNumericColumn");
+		this.flexTable.getCellFormatter().addStyleName(targetRow+1, 5, "watchListRemoveColumn");
+
 		super.onDrop(context);
 	}
 

@@ -21,7 +21,7 @@ public final class FlexTableDragController extends PickupDragController{
 		super.dragStart();  
 	}
 
-	private FlexTable draggableTable;
+	private DnDFlexTable draggableTable;
 	private int dragRow;
 
 	public FlexTableDragController(AbsolutePanel boundaryPanel) {
@@ -57,16 +57,15 @@ public final class FlexTableDragController extends PickupDragController{
 
 	@Override
 	protected Widget newDragProxy(DragContext context) {
-		FlexTable proxy;
-		proxy = new FlexTable();
+		DnDFlexTable proxy = new DnDFlexTable();
 		proxy.addStyleName(CSS_DEMO_FLEX_TABLE_ROW_EXAMPLE_TABLE_PROXY);
-		draggableTable = (FlexTable) context.draggable.getParent();
+		draggableTable = (DnDFlexTable) context.draggable.getParent();
 		dragRow = getWidgetRow(context.draggable, draggableTable);
 		FlexTableUtil.copyRow(draggableTable, proxy, dragRow, 0);
 		return proxy;
 	}
 
-	FlexTable getDraggableTable() {
+	DnDFlexTable getDraggableTable() {
 		return draggableTable;
 	}
 

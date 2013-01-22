@@ -33,7 +33,7 @@ public class DatabaseHandler {
 			connection  = DriverManager.getConnection("jdbc:mysql://"+IP+"/"+DATABASENAME,USERNAME,PASSWORD);
 			connection.setAutoCommit(true);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+		
 			e.printStackTrace();
 		}
 
@@ -54,11 +54,11 @@ public class DatabaseHandler {
 				return rs.getDouble(TEMPERATURECOLUMN);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 
-		return -273; //TODO, fix better error handling
+		return -273; 
 
 	}
 
@@ -76,7 +76,7 @@ public class DatabaseHandler {
 				stmt.executeUpdate("INSERT INTO "+DATABASENAME+"."+TABLENAME+" (`"+CITYCOLUMN+"`, `"+TEMPERATURECOLUMN+"`) VALUES ('"+city+"', "+temperature+");");
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 	}
@@ -95,7 +95,7 @@ public class DatabaseHandler {
 			stmt.executeUpdate("INSERT IGNORE INTO "+DATABASENAME+"."+TABLENAME+" VALUES (NULL, '"+country+"','"+area+"','"+city+"',NULL);");
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		
 			e.printStackTrace();
 		}
 	}
@@ -111,7 +111,7 @@ public class DatabaseHandler {
 			stmt.executeUpdate("DELETE FROM "+DATABASENAME+"."+TABLENAME+" WHERE "+CITYCOLUMN+"='"+city+"';");
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 
@@ -129,7 +129,7 @@ public class DatabaseHandler {
 			stmt.executeUpdate("UPDATE "+DATABASENAME+"."+TABLENAME+" SET "+CITYCOLUMN+"='"+newCity+"' WHERE "+CITYCOLUMN+"='"+oldCity+"';");
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 	}
@@ -145,7 +145,7 @@ public class DatabaseHandler {
 			stmt.executeUpdate("UPDATE "+DATABASENAME+"."+TABLENAME+" SET "+AREACOLUMN+"='"+newArea+"' WHERE "+AREACOLUMN+"='"+oldArea+"';");
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 	}
@@ -161,7 +161,7 @@ public class DatabaseHandler {
 			stmt.executeUpdate("UPDATE "+DATABASENAME+"."+TABLENAME+" SET "+COUNTRYCOLUMN+"='"+newCountry+"' WHERE "+CITYCOLUMN+"='"+oldCountry+"';");
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		
 			e.printStackTrace();
 		}
 	}

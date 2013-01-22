@@ -212,9 +212,14 @@ public class TemperatureWatcher implements EntryPoint {
 		newCityTextBox.setText("");
 
 		//Checks if the city is already in the flextable
-		for(int i = 0; i<temperatureDnDFlextableParam.getListOfTemperatures().size(); i++){
-			if (temperatureDnDFlextableParam.getListOfTemperatures().get(i).getCity().equals(city.toUpperCase())) return temperatureDnDFlextableParam.getListOfTemperatures();
+		for(int i = 0; i<temperatureDnDFlextable1.getListOfTemperatures().size(); i++){
+			if (temperatureDnDFlextable1.getListOfTemperatures().get(i).getCity().equals(city.toUpperCase())) return temperatureDnDFlextableParam.getListOfTemperatures();
 		}
+		for(int i = 0; i<temperatureDnDFlextable2.getListOfTemperatures().size(); i++){
+			if (temperatureDnDFlextable2.getListOfTemperatures().get(i).getCity().equals(city.toUpperCase())) return temperatureDnDFlextableParam.getListOfTemperatures();
+		}
+		
+		
 		
 		//Adds the new city to the flextable
 		
@@ -315,7 +320,8 @@ public class TemperatureWatcher implements EntryPoint {
 
 		// Make the call to the stock price service.
 
-		temperaturesSvc.getTemperatures(temperatureDnDFlextableParam.getListOfTemperatures(), callback); 
+		temperaturesSvc.getTemperatures(temperatureDnDFlextableParam.getListOfTemperatures(), callback);
+	
 
 	}
 
@@ -345,7 +351,7 @@ public class TemperatureWatcher implements EntryPoint {
 			if (listOfTemperaturesParam.get(row).getCity().toUpperCase().equals(temperature.getCity().toUpperCase())) boo=true;  //can be improved, only compares the city, i.e two cities with the same name in defferent countries/region can't be added
 		}
 		if (!boo) return;	
-		//			row--; //TODO, correct?
+		
 
 		// Format the data in the Price and Change fields.
 		String tempText = NumberFormat.getFormat("#,##0.00").format(temperature.getTemperature());

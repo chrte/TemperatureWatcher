@@ -20,7 +20,7 @@ public class FlexTableUtil {
    * @param sourceRow the index of the source row
    * @param targetRow the index before which to insert the copied row
    */
-  public static void copyRow(FlexTable sourceTable, FlexTable targetTable, int sourceRow,
+  public static void copyRow(DnDFlexTable sourceTable, DnDFlexTable targetTable, int sourceRow,
       int targetRow) {
     targetTable.insertRow(targetRow);
     for (int col = 0; col < sourceTable.getCellCount(sourceRow); col++) {
@@ -41,7 +41,7 @@ public class FlexTableUtil {
    * @param sourceRow the index of the source row
    * @param targetRow the index before which to insert the moved row
    */
-  public static void moveRow(FlexTable sourceTable, FlexTable targetTable, int sourceRow,
+  public static void moveRow(DnDFlexTable sourceTable, DnDFlexTable targetTable, int sourceRow,
       int targetRow) {
     if (sourceTable == targetTable && sourceRow >= targetRow) {
       sourceRow++;
@@ -68,8 +68,7 @@ public class FlexTableUtil {
    * @param sourceRow
    * @param targetRow
    */
-  private static void copyRowStyle(FlexTable sourceTable, FlexTable targetTable, int sourceRow,
-      int targetRow) {
+  private static void copyRowStyle(DnDFlexTable sourceTable, DnDFlexTable targetTable, int sourceRow, int targetRow) {
     String rowStyle = sourceTable.getRowFormatter().getStyleName(sourceRow);
     targetTable.getRowFormatter().setStyleName(targetRow, rowStyle);
   }

@@ -25,6 +25,13 @@ public class Temperature implements Serializable  {
 	public Temperature(){
 	}
 	
+	
+	public Temperature(String country, String area, String city){
+		this.city = city;
+		this.area = area;
+		this.country = country;
+		
+	}
 	/**
 	 * Constructor for the temperature class
 	 * @param city The city
