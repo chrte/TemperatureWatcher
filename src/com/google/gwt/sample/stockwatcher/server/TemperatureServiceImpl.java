@@ -24,6 +24,7 @@ import com.google.gwt.sample.stockwatcher.client.Temperature;
 import com.google.gwt.sample.stockwatcher.client.TemperatureService;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
+
 /**
  * The class that implements the TemperatureService
  * @author hento581, chrte707
@@ -37,9 +38,12 @@ public class TemperatureServiceImpl extends RemoteServiceServlet implements Temp
 	 */
 	private static final long serialVersionUID = 1L;
 
+
+
 	@Override
 
 	public ArrayList<Temperature> getTemperatures(ArrayList<Temperature> listOfTemperatures) throws DelistedException {
+		DatabaseHandler dbHandler = new DatabaseHandler();
 		for (int i=0; i<listOfTemperatures.size(); i++) {
 			Calendar cal = Calendar.getInstance(); // creates calendar
 			cal.setTime(new Date()); // sets calendar time/date
@@ -57,6 +61,12 @@ public class TemperatureServiceImpl extends RemoteServiceServlet implements Temp
 			listOfTemperatures.get(i).setLastUpdate(cal.getTime());
 			cal.add(Calendar.HOUR_OF_DAY, +1);
 			listOfTemperatures.get(i).setNextUpdate(cal.getTime());
+
+			System.out.println("change is" + change);
+			dbHandler.initiateCity(listOfTemperatures.get(i).getCountry(), listOfTemperatures.get(i).getArea(), listOfTemperatures.get(i).getCity());
+			dbHandler.setTemperature(listOfTemperatures.get(i).getCity(), temperature);
+			
+
 		}
 
 		return listOfTemperatures;
