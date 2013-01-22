@@ -10,4 +10,6 @@ public interface TemperatureService extends RemoteService {
 
 
 	ArrayList<Temperature> getTemperatures(ArrayList<Temperature> temperatures) throws DelistedException;
+	ArrayList<Temperature> getAllData();
+	Temperature deleteEntryFromDb(Temperature temperature);
 }

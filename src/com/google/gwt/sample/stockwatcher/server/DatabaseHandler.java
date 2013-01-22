@@ -1,8 +1,13 @@
 package com.google.gwt.sample.stockwatcher.server;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
+
+
 
 
 
@@ -14,7 +19,7 @@ import java.sql.SQLException;
 
 public class DatabaseHandler {
 
-	private static final String IP ="chrte.dyndns.org"; //may change to 192.168.1.100 if working local from @christians home, else chrte.dyndns.org
+	private static final String IP ="chrte.dyndns.org"; 
 	private static final String DATABASENAME ="TDDD24";
 	private static final String TABLENAME = "temperatures";
 	@SuppressWarnings("unused")
@@ -25,18 +30,28 @@ public class DatabaseHandler {
 	private static final String TEMPERATURECOLUMN = "temperature";
 	private static final String USERNAME="TDDD24";
 	private static final String PASSWORD="TDDD24";
-	private java.sql.Connection connection;
+	private Connection connection;
 
 	public DatabaseHandler(){
+		initiateConnection();
+
+	}
+	private void initiateConnection(){
 		try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			connection  = DriverManager.getConnection("jdbc:mysql://"+IP+"/"+DATABASENAME,USERNAME,PASSWORD);
-			connection.setAutoCommit(true);
-		} catch (Exception e) {
-		
+			if (connection==null || connection.isClosed()){
+				try {
+					Class.forName("com.mysql.jdbc.Driver").newInstance();
+					connection  = DriverManager.getConnection("jdbc:mysql://"+IP+"/"+DATABASENAME,USERNAME,PASSWORD);
+					connection.setAutoCommit(true);
+				} catch (Exception e) {
+
+					e.printStackTrace();
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	/**
@@ -45,6 +60,7 @@ public class DatabaseHandler {
 	 * @return The temperature in the city
 	 */
 	public double getTemperature(String city){
+		initiateConnection();
 		java.sql.Statement stmt = null;
 		ResultSet rs=null;
 		try {
@@ -54,21 +70,64 @@ public class DatabaseHandler {
 				return rs.getDouble(TEMPERATURECOLUMN);
 			}
 		} catch (SQLException e) {
-			
+
 			e.printStackTrace();
 		}
 
 		return -273; 
-
 	}
 
+	/**
+	 * Gets the country (String) given a city
+	 * @param  The city which to get the country from
+	 * @return The country of the city
+	 */
+	public String getCountry(String city){
+		initiateConnection();
+		java.sql.Statement stmt = null;
+		ResultSet rs=null;
+		try {
+			stmt = connection.createStatement();
+			rs = stmt.executeQuery("SELECT "+COUNTRYCOLUMN+" FROM " +DATABASENAME+"."+TABLENAME+" WHERE "+CITYCOLUMN+"='"+city+"';");
+			while (rs.next()){
+				return rs.getString(COUNTRYCOLUMN);
+			}
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+		return ""; 
+	}
+	/**
+	 * Gets the area (String) given a city
+	 * @param  The city which to get the area from
+	 * @return The area of the city
+	 */
+	public String getArea(String city){
+		initiateConnection();
+		java.sql.Statement stmt = null;
+		ResultSet rs=null;
+		try {
+			stmt = connection.createStatement();
+			rs = stmt.executeQuery("SELECT "+AREACOLUMN+" FROM " +DATABASENAME+"."+TABLENAME+" WHERE "+CITYCOLUMN+"='"+city+"';");
+			while (rs.next()){
+				return rs.getString(AREACOLUMN);
+			}
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+		return ""; 
+	}
 	/**
 	 * Set the temperature in a given city
 	 * @param city The city which to set the temperature
 	 * @param temperature The temperature in the given city
 	 */
 	public void setTemperature(String city,double temperature){
-
+		initiateConnection();
 		try {
 			java.sql.Statement stmt=null;
 			stmt =connection.createStatement();
@@ -76,7 +135,7 @@ public class DatabaseHandler {
 				stmt.executeUpdate("INSERT INTO "+DATABASENAME+"."+TABLENAME+" (`"+CITYCOLUMN+"`, `"+TEMPERATURECOLUMN+"`) VALUES ('"+city+"', "+temperature+");");
 			}
 		} catch (SQLException e) {
-			
+
 			e.printStackTrace();
 		}
 	}
@@ -89,13 +148,14 @@ public class DatabaseHandler {
 	 * @param city The city
 	 */
 	public void initiateCity(String country, String area, String city){
+		initiateConnection();
 		try {
 			java.sql.Statement stmt=null;
 			stmt =connection.createStatement();
 			stmt.executeUpdate("INSERT IGNORE INTO "+DATABASENAME+"."+TABLENAME+" VALUES (NULL, '"+country+"','"+area+"','"+city+"',NULL);");
 
 		} catch (SQLException e) {
-		
+
 			e.printStackTrace();
 		}
 	}
@@ -105,13 +165,20 @@ public class DatabaseHandler {
 	 * @param city The city to be  deleted
 	 */
 	public void deleteCity(String city){
+		initiateConnection();
 		try {
 			java.sql.Statement stmt=null;
-			stmt =connection.createStatement();
-			stmt.executeUpdate("DELETE FROM "+DATABASENAME+"."+TABLENAME+" WHERE "+CITYCOLUMN+"='"+city+"';");
+			stmt = connection.createStatement();
+			String query = "DELETE FROM `"+TABLENAME+"` WHERE `"+TABLENAME+"`.`"+CITYCOLUMN+"`='"+city+"';";
+			int statResult = stmt.executeUpdate(query);
+			System.out.println(statResult);
+			stmt.close();
+			connection.close();
+
+
 
 		} catch (SQLException e) {
-			
+
 			e.printStackTrace();
 		}
 
@@ -123,13 +190,14 @@ public class DatabaseHandler {
 	 * @param oldCity
 	 */
 	public void changeCityName(String newCity, String oldCity){
+		initiateConnection();
 		try {
 			java.sql.Statement stmt=null;
 			stmt =connection.createStatement();
 			stmt.executeUpdate("UPDATE "+DATABASENAME+"."+TABLENAME+" SET "+CITYCOLUMN+"='"+newCity+"' WHERE "+CITYCOLUMN+"='"+oldCity+"';");
 
 		} catch (SQLException e) {
-			
+
 			e.printStackTrace();
 		}
 	}
@@ -139,13 +207,14 @@ public class DatabaseHandler {
 	 * @param oldArea
 	 */
 	public void changeAreaName(String newArea, String oldArea){
+		initiateConnection();
 		try {
 			java.sql.Statement stmt=null;
 			stmt =connection.createStatement();
 			stmt.executeUpdate("UPDATE "+DATABASENAME+"."+TABLENAME+" SET "+AREACOLUMN+"='"+newArea+"' WHERE "+AREACOLUMN+"='"+oldArea+"';");
 
 		} catch (SQLException e) {
-			
+
 			e.printStackTrace();
 		}
 	}
@@ -155,15 +224,40 @@ public class DatabaseHandler {
 	 * @param oldCountry
 	 */
 	public void changeCountryName(String newCountry, String oldCountry){
+		initiateConnection();
 		try {
 			java.sql.Statement stmt=null;
 			stmt =connection.createStatement();
 			stmt.executeUpdate("UPDATE "+DATABASENAME+"."+TABLENAME+" SET "+COUNTRYCOLUMN+"='"+newCountry+"' WHERE "+CITYCOLUMN+"='"+oldCountry+"';");
 
 		} catch (SQLException e) {
-		
+
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Gets all cites in the database
+	 * @return An String[] with all the cities
+	 */
+	public ArrayList<String> getAllCities(){
+		initiateConnection();
+		java.sql.Statement stmt = null;
+		ResultSet rs=null;
+		ArrayList<String> cities = new ArrayList<String>();
+		try {
+			stmt = connection.createStatement();
+			rs = stmt.executeQuery("SELECT "+CITYCOLUMN+" FROM " +DATABASENAME+"."+TABLENAME+";");
+			while (rs.next()){
+				cities.add(rs.getString(CITYCOLUMN));
+
+
+			}
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+		return cities;
 	}
 }
 
