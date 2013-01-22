@@ -5,7 +5,9 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Utility class to manipulate {@link FlexTable FlexTables}.
+ * A class for manipulating the flextable
+ * @author This class is copied from https://gwt-dnd.appspot.com
+ *
  */
 public class FlexTableUtil {
 
