@@ -138,6 +138,7 @@ public class DatabaseHandler {
 
 			e.printStackTrace();
 		}
+		
 	}
 
 	/**
@@ -152,8 +153,9 @@ public class DatabaseHandler {
 		try {
 			java.sql.Statement stmt=null;
 			stmt =connection.createStatement();
-			stmt.executeUpdate("INSERT IGNORE INTO "+DATABASENAME+"."+TABLENAME+" VALUES (NULL, '"+country+"','"+area+"','"+city+"',NULL);");
-
+			if(getCountry(city).equals("")){
+			stmt.executeUpdate("INSERT IGNORE INTO "+DATABASENAME+"."+TABLENAME+" VALUES ('"+country+"','"+area+"','"+city+"',NULL);");
+			}
 		} catch (SQLException e) {
 
 			e.printStackTrace();
@@ -168,10 +170,15 @@ public class DatabaseHandler {
 		initiateConnection();
 		try {
 			java.sql.Statement stmt=null;
+			
 			stmt = connection.createStatement();
-			String query = "DELETE FROM `"+TABLENAME+"` WHERE `"+TABLENAME+"`.`"+CITYCOLUMN+"`='"+city+"';";
+			System.out.println("connection is read only "+ connection.isReadOnly());
+		
+			String query = "DELETE FROM `"+DATABASENAME+"`.`"+TABLENAME+"` WHERE `"+TABLENAME+"`.`"+CITYCOLUMN+"`='"+city+"';";
+			connection.prepareStatement(query);
+			
 			int statResult = stmt.executeUpdate(query);
-			System.out.println(statResult);
+			System.out.println(statResult+". query:" +query);
 			stmt.close();
 			connection.close();
 

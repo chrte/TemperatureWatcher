@@ -81,19 +81,19 @@ public class TemperatureWatcher implements EntryPoint {
 
 		// Setup timer to refresh list automatically. Refresh for the other table?
 
-		Timer refreshTimer = new Timer() {
-			Boolean firstRun=true;
-			@Override
-			public void run() {
-
-				if(!firstRun){
-					refreshWatchList(temperatureDnDFlextable1);
-					refreshWatchList(temperatureDnDFlextable2);
-				}
-				firstRun=false;
-			}
-		};
-		refreshTimer.scheduleRepeating(REFRESH_INTERVAL);
+		//		Timer refreshTimer = new Timer() {
+		//			Boolean firstRun=true;
+		//			@Override
+		//			public void run() {
+		//
+		//				if(!firstRun){
+		//					refreshWatchList(temperatureDnDFlextable1);
+		//					refreshWatchList(temperatureDnDFlextable2);
+		//				}
+		//				firstRun=false;
+		//			}
+		//		};
+		//		refreshTimer.scheduleRepeating(REFRESH_INTERVAL);
 
 	}
 
@@ -284,17 +284,20 @@ public class TemperatureWatcher implements EntryPoint {
 
 				for(removedIndex = 0; removedIndex<temperatureDnDFlextable1.getListOfTemperatures().size() && !boo ; removedIndex++){  
 					if (temperatureDnDFlextable1.getListOfTemperatures().get(removedIndex).getCity().toUpperCase().equals(temperature.getCity().toUpperCase())){
+						deleteEntryFromDb(temperatureDnDFlextable1.getListOfTemperatures().get(removedIndex)); //TODO: Can be out of bounds here
 						temperatureDnDFlextable1.removeTemperature(removedIndex);						
 						temperatureDnDFlextable1.removeRow(removedIndex+1);	
-						deleteEntryFromDb(temperatureDnDFlextable1.getListOfTemperatures().get(removedIndex));
+						
 					}
 				}
 				for(removedIndex = 0; removedIndex<temperatureDnDFlextable2.getListOfTemperatures().size() && !boo ; removedIndex++){  
 					if (temperatureDnDFlextable2.getListOfTemperatures().get(removedIndex).getCity().toUpperCase().equals(temperature.getCity().toUpperCase())){
+						
+						deleteEntryFromDb(temperatureDnDFlextable2.getListOfTemperatures().get(removedIndex));  //TODO, out of bounds here sometimes
 						temperatureDnDFlextable2.removeTemperature(removedIndex);						
 						temperatureDnDFlextable2.removeRow(removedIndex+1);
-						deleteEntryFromDb(temperatureDnDFlextable2.getListOfTemperatures().get(removedIndex));
 					}
+					
 				}
 
 
@@ -302,7 +305,7 @@ public class TemperatureWatcher implements EntryPoint {
 		});
 		temperatureDnDFlextableParam.setWidget(row, 5, removeStockButton);
 
-		//		refreshWatchList(temperatureDnDFlextableParam);
+		refreshWatchList(temperatureDnDFlextableParam);
 		//		return temperatureDnDFlextableParam.getListOfTemperatures();
 	}
 
