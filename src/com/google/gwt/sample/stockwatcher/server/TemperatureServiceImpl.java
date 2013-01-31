@@ -60,8 +60,6 @@ public class TemperatureServiceImpl extends RemoteServiceServlet implements Temp
 			listOfTemperatures.get(i).setLastUpdate(cal.getTime());
 			cal.add(Calendar.HOUR_OF_DAY, +1);
 			listOfTemperatures.get(i).setNextUpdate(cal.getTime());
-
-			System.out.println("change is" + change);
 			dbHandler.initiateCity(listOfTemperatures.get(i).getCountry(), listOfTemperatures.get(i).getArea(), listOfTemperatures.get(i).getCity());
 			dbHandler.setTemperature(listOfTemperatures.get(i).getCity(), temperature);	
 			
@@ -145,8 +143,7 @@ public class TemperatureServiceImpl extends RemoteServiceServlet implements Temp
 		NodeList n2List = doc.getElementsByTagName("temperature");
 		Node nNode2 = n2List.item(0);  //takes the first element of time
 		eElement = (Element) nNode2;
-		NodeList tempList = eElement.getChildNodes();
-		System.out.println("length of tempList " +tempList.getLength());
+//		NodeList tempList = eElement.getChildNodes();
 		return Double.parseDouble(eElement.getAttribute("value"));
 	}
 
@@ -155,5 +152,26 @@ public class TemperatureServiceImpl extends RemoteServiceServlet implements Temp
 	public Temperature deleteEntryFromDb(Temperature temperature) {
 		dbHandler.deleteCity(temperature.getCity());
 		return null;
+	}
+
+
+	@Override
+	public String setCountry(String newValue, String oldValue,String oldCity) {
+		dbHandler.setCountry(newValue, oldValue, oldCity);
+		return "i'm awesome";
+	}
+
+
+	@Override
+	public String setArea(String newValue, String oldValue, String oldCity) {
+		dbHandler.setArea(newValue, oldValue, oldCity);
+		return "im awesome";
+	}
+
+
+	@Override
+	public String setCity(String newValue, String oldValue) {
+		dbHandler.setCity(newValue, oldValue);
+		return "i'm awesome";
 	}
 }

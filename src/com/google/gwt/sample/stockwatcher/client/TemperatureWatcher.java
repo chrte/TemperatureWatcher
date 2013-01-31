@@ -9,26 +9,31 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLTable.Cell;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 @SuppressWarnings("deprecation")
 public class TemperatureWatcher implements EntryPoint {
@@ -134,7 +139,14 @@ public class TemperatureWatcher implements EntryPoint {
 		temperatureDnDFlextable1.addStyleName("watchList");	
 		temperatureDnDFlextable1.getCellFormatter().addStyleName(0, 3, "watchListRemoveColumn");
 		temperatureDnDFlextable1.getCellFormatter().addStyleName(0, 4, "watchListRemoveColumn");
-
+		temperatureDnDFlextable1.addClickHandler(new ClickHandler() { //adding clickhandler to deal with the ability to modify data in the flextable
+			@Override
+			public void onClick(ClickEvent event) {
+				initiateClickHandler(temperatureDnDFlextable1, event);
+				
+				
+			}
+		});
 		//Creates the second FlexTable
 		HTML handle2 = new HTML("Country");
 		handle.addStyleName("drag-handle");
@@ -152,6 +164,16 @@ public class TemperatureWatcher implements EntryPoint {
 		temperatureDnDFlextable2.getCellFormatter().addStyleName(0, 3, "watchListRemoveColumn");
 		temperatureDnDFlextable2.getCellFormatter().addStyleName(0, 4, "watchListRemoveColumn");
 
+		temperatureDnDFlextable2.addClickHandler(new ClickHandler() { //adding clickhandler to deal with the ability to modify data in the flextable
+			@Override
+			public void onClick(ClickEvent event) {
+				initiateClickHandler(temperatureDnDFlextable2, event);
+				
+				
+			}
+		});
+		
+		
 		// Add the Widgets to the absolutePanel
 		absolutePanel.add(errorMsgLabel);
 		absolutePanel.add(temperatureDnDFlextable1);			
@@ -197,6 +219,57 @@ public class TemperatureWatcher implements EntryPoint {
 
 	}
 
+	protected void initiateClickHandler(final DnDFlexTable temperatureDnDFlextableParam, ClickEvent event) {
+		// TODO Auto-generated method stub
+
+		final Cell src = temperatureDnDFlextableParam.getCellForEvent(event);
+		int rowIndex = src.getRowIndex();
+		final String oldValue = temperatureDnDFlextableParam.getText(rowIndex,src.getCellIndex());
+		final String oldCity = temperatureDnDFlextableParam.getText(rowIndex, 2);
+		System.out.println("in the onclick() and the oldvalue is "+oldValue);
+		final PopupPanel popup = new PopupPanel(false);
+		popup.setTitle("input country here");
+		final TextArea popupInput = new TextArea();
+		popup.add(popupInput);
+		popup.center();
+		popup.show();
+		popupInput.addKeyPressHandler(new KeyPressHandler() {
+			public void onKeyPress(KeyPressEvent event) {
+
+				if (event.getCharCode() == KeyCodes.KEY_ENTER) {
+					String tempText = popupInput.getText();
+					AsyncCallback<String> callback = new AsyncCallback<String>() {
+						public void onFailure(Throwable caught) {
+							System.out.println("failure");
+						}
+						@Override
+						public void onSuccess(String result) {
+							System.out.println("i'm a sucess");
+							refreshWatchList(temperatureDnDFlextableParam);
+							
+						}
+						
+					};
+					popup.hide();
+					System.out.println("popup is hided");
+					if (src.getCellIndex() == 0){
+					temperaturesSvc.setCountry(tempText,oldValue,oldCity, callback);
+					}
+					if (src.getCellIndex() == 1){
+						temperaturesSvc.setArea(tempText,oldValue, oldCity,callback);
+						}
+					if (src.getCellIndex() == 2){
+					temperaturesSvc.setCity(tempText,oldCity, callback);
+					}
+					
+					
+					
+				}
+			}
+		});
+		
+	}
+
 	/**
 	 * Add stock to FlexTable. Executed when the user clicks the addStockButton or
 	 * presses enter in the newSymbolTextBox.
@@ -239,7 +312,7 @@ public class TemperatureWatcher implements EntryPoint {
 		return temperatureDnDFlextableParam.getListOfTemperatures();
 
 	}
-	private void initiateHTMLElements(DnDFlexTable temperatureDnDFlextableParam,final Temperature temperature){
+	private void initiateHTMLElements(final DnDFlexTable temperatureDnDFlextableParam,final Temperature temperature){
 		final int row = temperatureDnDFlextableParam.getRowCount();
 		//		final String country = temperatureDnDFlextableParam.getText(row, 0);
 		//		final String country = temperatureDnDFlextableParam.getListOfTemperatures().get(row-1).getCountry();
@@ -247,11 +320,16 @@ public class TemperatureWatcher implements EntryPoint {
 		//		final String area = temperatureDnDFlextableParam.getListOfTemperatures().get(row-1).getArea();
 		//		final String city = temperatureDnDFlextableParam.getText(row, 2);
 		//		final String city = temperatureDnDFlextableParam.getListOfTemperatures().get(row-1).getCity();
-		HorizontalPanel countryPanel = new HorizontalPanel();
-		final Label countryLabel = new Label(temperature.getCountry());
-		countryPanel.add(countryLabel);
-		temperatureDnDFlextableParam.setWidget(row, 0, countryPanel);
-
+//		HorizontalPanel countryPanel = new HorizontalPanel();
+//		final Label countryLabel = new Label(temperature.getCountry());
+		TextArea countryText = new TextArea();
+		countryText.setText(temperature.getCountry());
+		
+//		countryPanel.add(countryText);
+		temperatureDnDFlextableParam.setWidget(row, 0, countryText);
+		
+//		Object temptemp = temperatureDnDFlextableParam.ge
+		
 		//Creates a draghandel for the country
 		HTML handle = new HTML(temperature.getCountry());
 		handle.addStyleName("drag-handle");
@@ -267,6 +345,7 @@ public class TemperatureWatcher implements EntryPoint {
 		final Label cityLabel = new Label(temperature.getCity());
 		cityPanel.add(cityLabel);
 		temperatureDnDFlextableParam.setWidget(row, 2, cityPanel);
+		
 
 
 		temperatureDnDFlextableParam.setWidget(row, 4, new Label());
@@ -281,6 +360,7 @@ public class TemperatureWatcher implements EntryPoint {
 			public void onClick(ClickEvent event) { 
 				Boolean boo = false;
 				int removedIndex = 0;
+				
 
 				for(removedIndex = 0; removedIndex<temperatureDnDFlextable1.getListOfTemperatures().size() && !boo ; removedIndex++){  
 					if (temperatureDnDFlextable1.getListOfTemperatures().get(removedIndex).getCity().toUpperCase().equals(temperature.getCity().toUpperCase())){
@@ -430,22 +510,13 @@ public class TemperatureWatcher implements EntryPoint {
 		String changePercentText = changeFormat.format(temperature.getChangePercent());
 		if (changePercentText==null) changePercentText ="";
 
-		// Populate the Price and Change fields with new data.
-
+		temperatureDnDFlextableParam.setText(row, 0, temperature.getCountry());
+		temperatureDnDFlextableParam.setText(row, 1, temperature.getArea());
+		temperatureDnDFlextableParam.setText(row, 2, temperature.getCity());
+	
+		
 		temperatureDnDFlextableParam.setText(row, 3, tempText);
-		//		Label changeWidget = (Label)temperatureDnDFlextableParam.getWidget(row, 4);
-		//		changeWidget.setText(changeText + " (" + changePercentText + "%)"); 
-
-		// Change the color of text in the Change field based on its value.
-		//		String changeStyleName = "noChange";
-		//		if (temperature.getChangePercent() < -0.1f) {
-		//			changeStyleName = "negativeChange";
-		//		}
-		//		else if (temperature.getChangePercent() > 0.1f) {
-		//			changeStyleName = "positiveChange";
-		//		}
-
-		//		changeWidget.setStyleName(changeStyleName);
+		
 	}
 	public Temperature getCurrentPlace(){
 		return currentPlace;

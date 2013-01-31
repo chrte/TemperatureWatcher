@@ -138,7 +138,7 @@ public class DatabaseHandler {
 
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class DatabaseHandler {
 			java.sql.Statement stmt=null;
 			stmt =connection.createStatement();
 			if(getCountry(city).equals("")){
-			stmt.executeUpdate("INSERT IGNORE INTO "+DATABASENAME+"."+TABLENAME+" VALUES ('"+country+"','"+area+"','"+city+"',NULL);");
+				stmt.executeUpdate("INSERT IGNORE INTO "+DATABASENAME+"."+TABLENAME+" VALUES ('"+country+"','"+area+"','"+city+"',NULL);");
 			}
 		} catch (SQLException e) {
 
@@ -170,13 +170,13 @@ public class DatabaseHandler {
 		initiateConnection();
 		try {
 			java.sql.Statement stmt=null;
-			
+
 			stmt = connection.createStatement();
 			System.out.println("connection is read only "+ connection.isReadOnly());
-		
+
 			String query = "DELETE FROM `"+DATABASENAME+"`.`"+TABLENAME+"` WHERE `"+TABLENAME+"`.`"+CITYCOLUMN+"`='"+city+"';";
 			connection.prepareStatement(query);
-			
+
 			int statResult = stmt.executeUpdate(query);
 			System.out.println(statResult+". query:" +query);
 			stmt.close();
@@ -265,6 +265,49 @@ public class DatabaseHandler {
 			e.printStackTrace();
 		}
 		return cities;
+	}
+	public void setCountry(String newValue, String oldValue, String oldCity) {
+		initiateConnection();
+		try {
+			java.sql.Statement stmt=null;
+			stmt =connection.createStatement();
+			stmt.executeUpdate("UPDATE "+DATABASENAME+"."+TABLENAME+" SET "+COUNTRYCOLUMN+"='"+newValue+"' WHERE "+CITYCOLUMN+"='"+oldCity+"';");
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+	}
+	public void setArea(String newValue, String oldValue, String oldCity) {
+		initiateConnection();
+		try {
+			java.sql.Statement stmt=null;
+			stmt =connection.createStatement();
+			stmt.executeUpdate("UPDATE "+DATABASENAME+"."+TABLENAME+" SET "+AREACOLUMN+"='"+newValue+"' WHERE "+CITYCOLUMN+"='"+oldCity+"';");
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+	}
+	public void setCity(String newValue, String oldValue) {
+		initiateConnection();
+		try {
+			java.sql.Statement stmt=null;
+			stmt =connection.createStatement();
+
+			stmt.executeUpdate("UPDATE "+DATABASENAME+"."+TABLENAME+" SET "+CITYCOLUMN+"='"+newValue+"' WHERE "+CITYCOLUMN+"='"+oldValue+"';");
+			String query ="DELETE FROM `"+DATABASENAME+"`.`"+TABLENAME+"` WHERE `"+TABLENAME+"`.`"+CITYCOLUMN+"`='"+oldValue+"';" ;
+			System.out.println(query);
+			stmt.executeUpdate(query);
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
 	}
 }
 

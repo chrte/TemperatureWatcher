@@ -12,4 +12,10 @@ public interface TemperatureService extends RemoteService {
 	ArrayList<Temperature> getTemperatures(ArrayList<Temperature> temperatures) throws DelistedException;
 	ArrayList<Temperature> getAllData();
 	Temperature deleteEntryFromDb(Temperature temperature);
+	String setCountry(String newValue, String oldValue, String oldCity);
+	String setArea(String newValue, String oldValue, String oldCity);
+	String setCity(String newValue, String oldValue);
+	
+	
+	
 }

@@ -84,4 +84,5 @@ public final class FlexTableDragController extends PickupDragController{
 		}
 		throw new RuntimeException("Unable to determine widget row");
 	}
+	
 }
