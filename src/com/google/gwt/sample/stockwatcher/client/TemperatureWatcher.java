@@ -341,10 +341,8 @@ public class TemperatureWatcher implements EntryPoint {
 		//Adds the new city to the flextable
 
 //		final int row = temperatureDnDFlextableParam.getRowCount(); 
-		Temperature tempTemp = new Temperature();
-		tempTemp.setArea(area);
-		tempTemp.setCity(city);
-		tempTemp.setCountry(country);
+		Temperature tempTemp = new Temperature(country, area, city, temperatureDnDFlextableParam.getId() );
+	
 		temperatureDnDFlextableParam.addTemperature(tempTemp);
 		initiateHTMLElements(temperatureDnDFlextableParam,tempTemp);
 		return temperatureDnDFlextableParam.getListOfTemperatures();
@@ -438,9 +436,19 @@ public class TemperatureWatcher implements EntryPoint {
 
 			@Override
 			public void onSuccess(ArrayList<Temperature> result) {
-
-				temperatureDnDFlextable2.setListOfTemperatures(result);
+				temperatureDnDFlextable1.removeAllTemperature();
+				temperatureDnDFlextable2.removeAllTemperature();
+				for(int j = 0; j<result.size(); j++){
+					if(result.get(j).getTable()==1){
+							temperatureDnDFlextable1.addTemperature(result.get(j));
+					}
+					else{
+						temperatureDnDFlextable2.addTemperature(result.get(j));
+					}
+				}
+				
 				for(int i = 0; i<temperatureDnDFlextable2.getListOfTemperatures().size();i++){
+					
 					initiateHTMLElements(temperatureDnDFlextable2,temperatureDnDFlextable2.getListOfTemperatures().get(i));
 				}
 
@@ -491,9 +499,19 @@ public class TemperatureWatcher implements EntryPoint {
 
 			@Override
 			public void onSuccess(ArrayList<Temperature> result) {
-				if (temperatureDnDFlextableParam.getListOfTemperatures().equals(temperatureDnDFlextable1.getListOfTemperatures())) temperatureDnDFlextable1.setListOfTemperatures(result);
-				else temperatureDnDFlextable2.setListOfTemperatures(result);
-				updateTable(result, temperatureDnDFlextableParam);
+				
+				
+				for(int j = 0; j<result.size(); j++){
+					if(result.get(j).getTable()==1){
+							temperatureDnDFlextable1.addTemperature(result.get(j));
+					}
+					else{
+						temperatureDnDFlextable2.addTemperature(result.get(j));
+					}
+				}
+				
+				updateTable(temperatureDnDFlextable1);
+				updateTable(temperatureDnDFlextable2);
 
 			}
 		};
@@ -506,10 +524,10 @@ public class TemperatureWatcher implements EntryPoint {
 	}
 
 
-	private void updateTable(ArrayList<Temperature> result, DnDFlexTable temperatureDnDFlextableParam) {
+	private void updateTable(DnDFlexTable temperatureDnDFlextableParam) {
 
-		for (int i = 0; i < result.size(); i++) {
-			updateTable(result.get(i), temperatureDnDFlextableParam, temperatureDnDFlextableParam.getListOfTemperatures());
+		for (int i = 0; i < temperatureDnDFlextableParam.getListOfTemperatures().size(); i++) {
+			updateTable(temperatureDnDFlextableParam.getListOfTemperatures().get(i), temperatureDnDFlextableParam, temperatureDnDFlextableParam.getListOfTemperatures());
 		}
 		// Display timestamp showing last refresh.
 		lastUpdatedLabel.setText("Last update : "

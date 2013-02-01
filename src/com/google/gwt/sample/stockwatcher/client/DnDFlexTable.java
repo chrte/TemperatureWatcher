@@ -23,6 +23,9 @@ public class DnDFlexTable extends FlexTable {
 		listOfTemperatures.remove(index);
 	}
 	
+	public void removeAllTemperature(){
+		listOfTemperatures = new ArrayList<Temperature>();
+	}
 	
 	public ArrayList<Temperature> getListOfTemperatures() {
 		return listOfTemperatures;

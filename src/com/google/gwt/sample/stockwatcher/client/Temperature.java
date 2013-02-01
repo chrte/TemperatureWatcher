@@ -24,6 +24,7 @@ public class Temperature implements Serializable  {
 	 * Default empty constructor for the temperature class
 	 */
 	public Temperature(){
+		
 	}
 	
 	
@@ -34,17 +35,7 @@ public class Temperature implements Serializable  {
 		this.table=table;
 		
 	}
-	/**
-	 * Constructor for the temperature class
-	 * @param city The city
-	 * @param temp The temperature to set
-	 * @param change The change from last temperature
-	 */
-	public Temperature(String city, double temp, double change) {
-		this.setCity(city);
-		this.temperature = temp;
-		this.change = change;
-	}
+	
 
 	/**
 	 * Getter for the temperature
