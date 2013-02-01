@@ -9,21 +9,20 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
+
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.user.client.Event;
+
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
+
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FocusWidget;
+
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLTable.Cell;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -33,7 +32,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
+
 
 @SuppressWarnings("deprecation")
 public class TemperatureWatcher implements EntryPoint {
@@ -50,11 +49,10 @@ public class TemperatureWatcher implements EntryPoint {
 	private Button addCityButton = new Button("Add");
 	private Button editButton = new Button("Edit");
 	private Label lastUpdatedLabel = new Label();
-	//	private ArrayList<Temperature> listOfTemperatures = new ArrayList<Temperature>();
-	//	private ArrayList<Temperature> listOfTemperatures2 = new ArrayList<Temperature>();
+
 	private TemperatureServiceAsync temperaturesSvc = GWT.create(TemperatureService.class);
 	private Label errorMsgLabel = new Label();
-	private final static int REFRESH_INTERVAL =5000; //to long. change to *10
+//	private final static int REFRESH_INTERVAL =5000; //to long. change to *10
 	private Temperature currentPlace = null;
 	private AbsolutePanel absolutePanel;
 	private FlexTableDragController tableDragController;
@@ -222,7 +220,7 @@ public class TemperatureWatcher implements EntryPoint {
 	}
 
 	protected void initiateClickHandler(final DnDFlexTable temperatureDnDFlextableParam, ClickEvent event) {
-		// TODO Auto-generated method stub
+	
 
 		final Cell src = temperatureDnDFlextableParam.getCellForEvent(event);
 		int rowIndex = src.getRowIndex();
@@ -342,7 +340,7 @@ public class TemperatureWatcher implements EntryPoint {
 
 		//Adds the new city to the flextable
 
-		final int row = temperatureDnDFlextableParam.getRowCount(); 
+//		final int row = temperatureDnDFlextableParam.getRowCount(); 
 		Temperature tempTemp = new Temperature();
 		tempTemp.setArea(area);
 		tempTemp.setCity(city);
@@ -354,22 +352,14 @@ public class TemperatureWatcher implements EntryPoint {
 	}
 	private void initiateHTMLElements(final DnDFlexTable temperatureDnDFlextableParam,final Temperature temperature){
 		final int row = temperatureDnDFlextableParam.getRowCount();
-		//		final String country = temperatureDnDFlextableParam.getText(row, 0);
-		//		final String country = temperatureDnDFlextableParam.getListOfTemperatures().get(row-1).getCountry();
-		//		final String area = temperatureDnDFlextableParam.getText(row, 1);
-		//		final String area = temperatureDnDFlextableParam.getListOfTemperatures().get(row-1).getArea();
-		//		final String city = temperatureDnDFlextableParam.getText(row, 2);
-		//		final String city = temperatureDnDFlextableParam.getListOfTemperatures().get(row-1).getCity();
-//		HorizontalPanel countryPanel = new HorizontalPanel();
-//		final Label countryLabel = new Label(temperature.getCountry());
+
+
 		TextArea countryText = new TextArea();
 		countryText.setText(temperature.getCountry());
 		
-//		countryPanel.add(countryText);
 		temperatureDnDFlextableParam.setWidget(row, 0, countryText);
 		
-//		Object temptemp = temperatureDnDFlextableParam.ge
-		
+
 		//Creates a draghandel for the country
 		HTML handle = new HTML(temperature.getCountry());
 		handle.addStyleName("drag-handle");
@@ -405,7 +395,7 @@ public class TemperatureWatcher implements EntryPoint {
 
 				for(removedIndex = 0; removedIndex<temperatureDnDFlextable1.getListOfTemperatures().size() && !boo ; removedIndex++){  
 					if (temperatureDnDFlextable1.getListOfTemperatures().get(removedIndex).getCity().toUpperCase().equals(temperature.getCity().toUpperCase())){
-						deleteEntryFromDb(temperatureDnDFlextable1.getListOfTemperatures().get(removedIndex)); //TODO: Can be out of bounds here
+						deleteEntryFromDb(temperatureDnDFlextable1.getListOfTemperatures().get(removedIndex)); 
 						temperatureDnDFlextable1.removeTemperature(removedIndex);						
 						temperatureDnDFlextable1.removeRow(removedIndex+1);	
 						
@@ -414,7 +404,7 @@ public class TemperatureWatcher implements EntryPoint {
 				for(removedIndex = 0; removedIndex<temperatureDnDFlextable2.getListOfTemperatures().size() && !boo ; removedIndex++){  
 					if (temperatureDnDFlextable2.getListOfTemperatures().get(removedIndex).getCity().toUpperCase().equals(temperature.getCity().toUpperCase())){
 						
-						deleteEntryFromDb(temperatureDnDFlextable2.getListOfTemperatures().get(removedIndex));  //TODO, out of bounds here sometimes
+						deleteEntryFromDb(temperatureDnDFlextable2.getListOfTemperatures().get(removedIndex)); 
 						temperatureDnDFlextable2.removeTemperature(removedIndex);						
 						temperatureDnDFlextable2.removeRow(removedIndex+1);
 					}
@@ -427,7 +417,7 @@ public class TemperatureWatcher implements EntryPoint {
 		temperatureDnDFlextableParam.setWidget(row, 5, removeStockButton);
 
 		refreshWatchList(temperatureDnDFlextableParam);
-		//		return temperatureDnDFlextableParam.getListOfTemperatures();
+		
 	}
 
 	private void populateWithDbData(){
@@ -569,24 +559,8 @@ public class TemperatureWatcher implements EntryPoint {
 	}
 
 	private void initCities(){
-		//
-		//
-		//		newCountryTextBox.setText("SWEDEN");
-		//		newAreaTextBox.setText("BLEKINGE");
-		//		newCityTextBox.setText("KARLSKRONA");
-		//		addCity(temperatureDnDFlextable, listOfTemperatures);
-		//
-		//		newCountryTextBox.setText("SWEDEN");
-		//		newAreaTextBox.setText("DALARNA");
-		//		newCityTextBox.setText("ORSA");
-		//		addCity(temperatureDnDFlextable, listOfTemperatures);
-		//
-		//		newCountryTextBox.setText("SWEDEN");
-		//		newAreaTextBox.setText("NORRBOTTEN");
-		//		newCityTextBox.setText("KIRUNA");
-		//		
-		//		temperatureDnDFlextable2.setListOfTemperatures(addCity(temperatureDnDFlextable2)); 
-		populateWithDbData();
+				
+			populateWithDbData();
 
 
 	}
