@@ -16,6 +16,7 @@ public class Temperature implements Serializable  {
 	private String city;
 	private double temperature;
 	private double change;
+	private int table;
 	private Date lastUpdate=null; //to know if we haven't get any updates
 	private Date nextUpdate=null; //to know if we haven't get any updates
 
@@ -26,10 +27,11 @@ public class Temperature implements Serializable  {
 	}
 	
 	
-	public Temperature(String country, String area, String city){
+	public Temperature(String country, String area, String city, int table){
 		this.city = city;
 		this.area = area;
 		this.country = country;
+		this.table=table;
 		
 	}
 	/**
@@ -162,6 +164,15 @@ public class Temperature implements Serializable  {
 	 */
 	public void setNextUpdate(Date nextUpdate) {
 		this.nextUpdate = nextUpdate;
+	}
+
+
+	public void setTable(int table){
+		this.table=table;
+	}
+	public int getTable() {
+	
+		return this.table;
 	}
 
 }

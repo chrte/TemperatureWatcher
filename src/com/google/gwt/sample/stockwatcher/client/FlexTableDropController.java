@@ -75,7 +75,7 @@ public class FlexTableDropController extends AbstractPositioningDropController  
 		String country =  trDragController.getDraggableTable().getText(trDragController.getDragRow(), 0);
 		String area =  trDragController.getDraggableTable().getText(trDragController.getDragRow(), 1);
 		String city =  trDragController.getDraggableTable().getText(trDragController.getDragRow(), 2);
-		Temperature temperature = new Temperature(country, area, city);
+		Temperature temperature = new Temperature(country, area, city,this.flexTable.getId());
 		this.flexTable.addTemperature(temperature);		
 		int index = trDragController.getDraggableTable().findIndexOfCity(city);
 		trDragController.getDraggableTable().removeTemperature(index);

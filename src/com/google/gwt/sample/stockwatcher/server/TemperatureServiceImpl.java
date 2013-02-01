@@ -60,7 +60,7 @@ public class TemperatureServiceImpl extends RemoteServiceServlet implements Temp
 			listOfTemperatures.get(i).setLastUpdate(cal.getTime());
 			cal.add(Calendar.HOUR_OF_DAY, +1);
 			listOfTemperatures.get(i).setNextUpdate(cal.getTime());
-			dbHandler.initiateCity(listOfTemperatures.get(i).getCountry(), listOfTemperatures.get(i).getArea(), listOfTemperatures.get(i).getCity());
+			dbHandler.initiateCity(listOfTemperatures.get(i).getCountry(), listOfTemperatures.get(i).getArea(), listOfTemperatures.get(i).getCity(),listOfTemperatures.get(i).getTable());
 			dbHandler.setTemperature(listOfTemperatures.get(i).getCity(), temperature);	
 			
 		}
@@ -75,7 +75,7 @@ public class TemperatureServiceImpl extends RemoteServiceServlet implements Temp
 		ArrayList<String> cities = dbHandler.getAllCities();
 		ArrayList<Temperature> citiesInArrayList = new ArrayList<Temperature>();
 		for (int i=0; i<cities.size();i++){
-			Temperature tempTemperature = new Temperature(dbHandler.getCountry(cities.get(i)), dbHandler.getArea(cities.get(i)), cities.get(i));
+			Temperature tempTemperature = new Temperature(dbHandler.getCountry(cities.get(i)), dbHandler.getArea(cities.get(i)), cities.get(i),dbHandler.getTable(cities.get(i)));
 			tempTemperature.setTemperature(dbHandler.getTemperature(cities.get(i)));
 			citiesInArrayList.add(tempTemperature);
 		}
