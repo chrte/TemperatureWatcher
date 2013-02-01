@@ -45,8 +45,10 @@ public class TemperatureWatcher implements EntryPoint {
 	private HorizontalPanel addPanel = new HorizontalPanel();
 	private TextBox newCountryTextBox = new TextBox();
 	private TextBox newCityTextBox = new TextBox();
+	
 	private TextBox newAreaTextBox = new TextBox();
 	private Button addCityButton = new Button("Add");
+	private Button editButton = new Button("Edit");
 	private Label lastUpdatedLabel = new Label();
 	//	private ArrayList<Temperature> listOfTemperatures = new ArrayList<Temperature>();
 	//	private ArrayList<Temperature> listOfTemperatures2 = new ArrayList<Temperature>();
@@ -62,7 +64,7 @@ public class TemperatureWatcher implements EntryPoint {
 	}
 
 	private void createDnDFlexTables() {
-
+		
 		absolutePanel = new AbsolutePanel();
 		absolutePanel.setPixelSize(850, 800);
 		RootPanel.get("stockList").add(absolutePanel);
@@ -228,15 +230,53 @@ public class TemperatureWatcher implements EntryPoint {
 		final String oldCity = temperatureDnDFlextableParam.getText(rowIndex, 2);
 		System.out.println("in the onclick() and the oldvalue is "+oldValue);
 		final PopupPanel popup = new PopupPanel(false);
+		final AbsolutePanel popupPanel = new AbsolutePanel();
 		popup.setTitle("input country here");
 		final TextArea popupInput = new TextArea();
-		popup.add(popupInput);
+		popupPanel.add(popupInput);
+		popupPanel.add(editButton);
+		popup.add(popupPanel);
 		popup.center();
+	
 		popup.show();
+		
+		
+		editButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				String tempText = popupInput.getText();
+				AsyncCallback<String> callback = new AsyncCallback<String>() {
+					public void onFailure(Throwable caught) {
+						System.out.println("failure");
+					}
+					@Override
+					public void onSuccess(String result) {
+						System.out.println("i'm a sucess");
+						refreshWatchList(temperatureDnDFlextableParam);
+						
+					}
+					
+				};
+				popup.hide();
+				System.out.println("popup is hided");
+				if (src.getCellIndex() == 0){
+				temperaturesSvc.setCountry(tempText,oldValue,oldCity, callback);
+				}
+				if (src.getCellIndex() == 1){
+					temperaturesSvc.setArea(tempText,oldValue, oldCity,callback);
+					}
+				if (src.getCellIndex() == 2){
+				temperaturesSvc.setCity(tempText,oldCity, callback);
+				} 
+			}
+		});
+		
 		popupInput.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
-
+				System.out.println("im here!");
 				if (event.getCharCode() == KeyCodes.KEY_ENTER) {
+					
+					
+					
 					String tempText = popupInput.getText();
 					AsyncCallback<String> callback = new AsyncCallback<String>() {
 						public void onFailure(Throwable caught) {
@@ -338,6 +378,7 @@ public class TemperatureWatcher implements EntryPoint {
 
 		HorizontalPanel areaPanel = new HorizontalPanel();
 		final Label areaLabel = new Label(temperature.getArea());
+		
 		areaPanel.add(areaLabel);
 		temperatureDnDFlextableParam.setWidget(row, 1, areaPanel);
 
@@ -469,7 +510,7 @@ public class TemperatureWatcher implements EntryPoint {
 
 		// Make the call to the stock price service.
 
-		temperaturesSvc.getTemperatures(temperatureDnDFlextableParam.getListOfTemperatures(), callback);
+		temperaturesSvc.getAllData(callback);
 
 
 	}
