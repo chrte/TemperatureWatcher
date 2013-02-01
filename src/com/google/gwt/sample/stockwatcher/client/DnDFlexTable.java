@@ -7,9 +7,11 @@ import com.google.gwt.user.client.ui.FlexTable;
 public class DnDFlexTable extends FlexTable {
 	
 	private ArrayList<Temperature> listOfTemperatures;
+	private int id;
 	
-	public DnDFlexTable(){		
-		setListOfTemperatures(new ArrayList<Temperature>());		
+	public DnDFlexTable(int id){		
+		setListOfTemperatures(new ArrayList<Temperature>());	
+		this.setId(id);
 	}
 
 	
@@ -43,6 +45,16 @@ public class DnDFlexTable extends FlexTable {
 		
 		return index;
 		
+	}
+
+
+	public int getId() {
+		return id;
+	}
+
+
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 

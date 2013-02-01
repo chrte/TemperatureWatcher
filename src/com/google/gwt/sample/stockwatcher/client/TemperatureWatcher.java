@@ -72,8 +72,8 @@ public class TemperatureWatcher implements EntryPoint {
 		tableDragController = new FlexTableDragController(absolutePanel);
 		tableDragController.addDragHandler(demoDragHandler);
 
-		temperatureDnDFlextable1 = new DnDFlexTable();
-		temperatureDnDFlextable2 = new DnDFlexTable();
+		temperatureDnDFlextable1 = new DnDFlexTable(1);
+		temperatureDnDFlextable2 = new DnDFlexTable(2);
 
 		createLayout();
 

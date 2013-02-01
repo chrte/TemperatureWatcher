@@ -57,7 +57,7 @@ public final class FlexTableDragController extends PickupDragController{
 
 	@Override
 	protected Widget newDragProxy(DragContext context) {
-		DnDFlexTable proxy = new DnDFlexTable();
+		DnDFlexTable proxy = new DnDFlexTable(3);
 		proxy.addStyleName(CSS_DEMO_FLEX_TABLE_ROW_EXAMPLE_TABLE_PROXY);
 		draggableTable = (DnDFlexTable) context.draggable.getParent();
 		dragRow = getWidgetRow(context.draggable, draggableTable);
