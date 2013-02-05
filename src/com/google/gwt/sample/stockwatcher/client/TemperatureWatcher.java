@@ -44,7 +44,7 @@ public class TemperatureWatcher implements EntryPoint {
 	private HorizontalPanel addPanel = new HorizontalPanel();
 	private TextBox newCountryTextBox = new TextBox();
 	private TextBox newCityTextBox = new TextBox();
-	
+
 	private TextBox newAreaTextBox = new TextBox();
 	private Button addCityButton = new Button("Add");
 	private Button editButton = new Button("Edit");
@@ -52,7 +52,7 @@ public class TemperatureWatcher implements EntryPoint {
 
 	private TemperatureServiceAsync temperaturesSvc = GWT.create(TemperatureService.class);
 	private Label errorMsgLabel = new Label();
-//	private final static int REFRESH_INTERVAL =5000; //to long. change to *10
+	//	private final static int REFRESH_INTERVAL =5000; //to long. change to *10
 	private Temperature currentPlace = null;
 	private AbsolutePanel absolutePanel;
 	private FlexTableDragController tableDragController;
@@ -62,7 +62,7 @@ public class TemperatureWatcher implements EntryPoint {
 	}
 
 	private void createDnDFlexTables() {
-		
+
 		absolutePanel = new AbsolutePanel();
 		absolutePanel.setPixelSize(850, 800);
 		RootPanel.get("stockList").add(absolutePanel);
@@ -143,8 +143,8 @@ public class TemperatureWatcher implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 				initiateClickHandler(temperatureDnDFlextable1, event);
-				
-				
+
+
 			}
 		});
 		//Creates the second FlexTable
@@ -168,12 +168,12 @@ public class TemperatureWatcher implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 				initiateClickHandler(temperatureDnDFlextable2, event);
-				
-				
+
+
 			}
 		});
-		
-		
+
+
 		// Add the Widgets to the absolutePanel
 		absolutePanel.add(errorMsgLabel);
 		absolutePanel.add(temperatureDnDFlextable1);			
@@ -220,10 +220,10 @@ public class TemperatureWatcher implements EntryPoint {
 	}
 
 	protected void initiateClickHandler(final DnDFlexTable temperatureDnDFlextableParam, ClickEvent event) {
-	
+
 
 		final Cell src = temperatureDnDFlextableParam.getCellForEvent(event);
-		int rowIndex = src.getRowIndex();
+		int rowIndex = src.getRowIndex();  //TODO, check for null
 		final String oldValue = temperatureDnDFlextableParam.getText(rowIndex,src.getCellIndex());
 		final String oldCity = temperatureDnDFlextableParam.getText(rowIndex, 2);
 		System.out.println("in the onclick() and the oldvalue is "+oldValue);
@@ -235,10 +235,10 @@ public class TemperatureWatcher implements EntryPoint {
 		popupPanel.add(editButton);
 		popup.add(popupPanel);
 		popup.center();
-	
+
 		popup.show();
-		
-		
+
+
 		editButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				String tempText = popupInput.getText();
@@ -250,31 +250,31 @@ public class TemperatureWatcher implements EntryPoint {
 					public void onSuccess(String result) {
 						System.out.println("i'm a sucess");
 						refreshWatchList(temperatureDnDFlextableParam);
-						
+
 					}
-					
+
 				};
 				popup.hide();
 				System.out.println("popup is hided");
 				if (src.getCellIndex() == 0){
-				temperaturesSvc.setCountry(tempText,oldValue,oldCity, callback);
+					temperaturesSvc.setCountry(tempText,oldValue,oldCity, callback);
 				}
 				if (src.getCellIndex() == 1){
 					temperaturesSvc.setArea(tempText,oldValue, oldCity,callback);
-					}
+				}
 				if (src.getCellIndex() == 2){
-				temperaturesSvc.setCity(tempText,oldCity, callback);
+					temperaturesSvc.setCity(tempText,oldCity, callback);
 				} 
 			}
 		});
-		
+
 		popupInput.addKeyPressHandler(new KeyPressHandler() {
 			public void onKeyPress(KeyPressEvent event) {
 				System.out.println("im here!");
 				if (event.getCharCode() == KeyCodes.KEY_ENTER) {
-					
-					
-					
+
+
+
 					String tempText = popupInput.getText();
 					AsyncCallback<String> callback = new AsyncCallback<String>() {
 						public void onFailure(Throwable caught) {
@@ -284,28 +284,28 @@ public class TemperatureWatcher implements EntryPoint {
 						public void onSuccess(String result) {
 							System.out.println("i'm a sucess");
 							refreshWatchList(temperatureDnDFlextableParam);
-							
+
 						}
-						
+
 					};
 					popup.hide();
 					System.out.println("popup is hided");
 					if (src.getCellIndex() == 0){
-					temperaturesSvc.setCountry(tempText,oldValue,oldCity, callback);
+						temperaturesSvc.setCountry(tempText,oldValue,oldCity, callback);
 					}
 					if (src.getCellIndex() == 1){
 						temperaturesSvc.setArea(tempText,oldValue, oldCity,callback);
-						}
-					if (src.getCellIndex() == 2){
-					temperaturesSvc.setCity(tempText,oldCity, callback);
 					}
-					
-					
-					
+					if (src.getCellIndex() == 2){
+						temperaturesSvc.setCity(tempText,oldCity, callback);
+					}
+
+
+
 				}
 			}
 		});
-		
+
 	}
 
 	/**
@@ -340,23 +340,37 @@ public class TemperatureWatcher implements EntryPoint {
 
 		//Adds the new city to the flextable
 
-//		final int row = temperatureDnDFlextableParam.getRowCount(); 
-		Temperature tempTemp = new Temperature(country, area, city, temperatureDnDFlextableParam.getId() );
-	
+		//		final int row = temperatureDnDFlextableParam.getRowCount(); 
+		final Temperature tempTemp = new Temperature(country, area, city, temperatureDnDFlextableParam.getId() );
+
 		temperatureDnDFlextableParam.addTemperature(tempTemp);
-		initiateHTMLElements(temperatureDnDFlextableParam,tempTemp);
+			
+		//Adds the city to the db
+		if (temperaturesSvc == null) {
+			temperaturesSvc = GWT.create(TemperatureService.class);
+
+		}
+		AsyncCallback<Temperature> callback = new AsyncCallback<Temperature>() {
+			public void onFailure(Throwable caught) {
+			}
+
+			@Override
+			public void onSuccess(Temperature result) {
+				initiateHTMLElements(temperatureDnDFlextableParam, tempTemp);
+				refreshWatchList(temperatureDnDFlextableParam);
+			}
+		};
+		temperaturesSvc.initiateCity(tempTemp, callback);
 		return temperatureDnDFlextableParam.getListOfTemperatures();
 
 	}
 	private void initiateHTMLElements(final DnDFlexTable temperatureDnDFlextableParam,final Temperature temperature){
 		final int row = temperatureDnDFlextableParam.getRowCount();
 
-
 		TextArea countryText = new TextArea();
 		countryText.setText(temperature.getCountry());
-		
+
 		temperatureDnDFlextableParam.setWidget(row, 0, countryText);
-		
 
 		//Creates a draghandel for the country
 		HTML handle = new HTML(temperature.getCountry());
@@ -366,7 +380,7 @@ public class TemperatureWatcher implements EntryPoint {
 
 		HorizontalPanel areaPanel = new HorizontalPanel();
 		final Label areaLabel = new Label(temperature.getArea());
-		
+
 		areaPanel.add(areaLabel);
 		temperatureDnDFlextableParam.setWidget(row, 1, areaPanel);
 
@@ -374,7 +388,7 @@ public class TemperatureWatcher implements EntryPoint {
 		final Label cityLabel = new Label(temperature.getCity());
 		cityPanel.add(cityLabel);
 		temperatureDnDFlextableParam.setWidget(row, 2, cityPanel);
-		
+
 
 
 		temperatureDnDFlextableParam.setWidget(row, 4, new Label());
@@ -389,24 +403,24 @@ public class TemperatureWatcher implements EntryPoint {
 			public void onClick(ClickEvent event) { 
 				Boolean boo = false;
 				int removedIndex = 0;
-				
+
 
 				for(removedIndex = 0; removedIndex<temperatureDnDFlextable1.getListOfTemperatures().size() && !boo ; removedIndex++){  
 					if (temperatureDnDFlextable1.getListOfTemperatures().get(removedIndex).getCity().toUpperCase().equals(temperature.getCity().toUpperCase())){
 						deleteEntryFromDb(temperatureDnDFlextable1.getListOfTemperatures().get(removedIndex)); 
 						temperatureDnDFlextable1.removeTemperature(removedIndex);						
 						temperatureDnDFlextable1.removeRow(removedIndex+1);	
-						
+
 					}
 				}
 				for(removedIndex = 0; removedIndex<temperatureDnDFlextable2.getListOfTemperatures().size() && !boo ; removedIndex++){  
 					if (temperatureDnDFlextable2.getListOfTemperatures().get(removedIndex).getCity().toUpperCase().equals(temperature.getCity().toUpperCase())){
-						
+
 						deleteEntryFromDb(temperatureDnDFlextable2.getListOfTemperatures().get(removedIndex)); 
 						temperatureDnDFlextable2.removeTemperature(removedIndex);						
 						temperatureDnDFlextable2.removeRow(removedIndex+1);
 					}
-					
+
 				}
 
 
@@ -414,8 +428,7 @@ public class TemperatureWatcher implements EntryPoint {
 		});
 		temperatureDnDFlextableParam.setWidget(row, 5, removeStockButton);
 
-		refreshWatchList(temperatureDnDFlextableParam);
-		
+
 	}
 
 	private void populateWithDbData(){
@@ -440,15 +453,18 @@ public class TemperatureWatcher implements EntryPoint {
 				temperatureDnDFlextable2.removeAllTemperature();
 				for(int j = 0; j<result.size(); j++){
 					if(result.get(j).getTable()==1){
-							temperatureDnDFlextable1.addTemperature(result.get(j));
+						temperatureDnDFlextable1.addTemperature(result.get(j));
 					}
 					else{
 						temperatureDnDFlextable2.addTemperature(result.get(j));
 					}
 				}
-				
+
+				for(int i = 0; i<temperatureDnDFlextable1.getListOfTemperatures().size();i++){
+					initiateHTMLElements(temperatureDnDFlextable1,temperatureDnDFlextable1.getListOfTemperatures().get(i));
+				}
 				for(int i = 0; i<temperatureDnDFlextable2.getListOfTemperatures().size();i++){
-					
+
 					initiateHTMLElements(temperatureDnDFlextable2,temperatureDnDFlextable2.getListOfTemperatures().get(i));
 				}
 
@@ -482,7 +498,6 @@ public class TemperatureWatcher implements EntryPoint {
 		// Initialize the service proxy.
 		if (temperaturesSvc == null) {
 			temperaturesSvc = GWT.create(TemperatureService.class);
-
 		}
 
 		// Set up the callback object.
@@ -497,26 +512,29 @@ public class TemperatureWatcher implements EntryPoint {
 				errorMsgLabel.setVisible(true);
 			}
 
+
 			@Override
 			public void onSuccess(ArrayList<Temperature> result) {
-				
-				
+				if (result==null) return;
+				temperatureDnDFlextable1 = new DnDFlexTable(1);
+				temperatureDnDFlextable2 = new DnDFlexTable(2);
 				for(int j = 0; j<result.size(); j++){
 					if(result.get(j).getTable()==1){
-							temperatureDnDFlextable1.addTemperature(result.get(j));
+						temperatureDnDFlextable1.addTemperature(result.get(j));
 					}
 					else{
 						temperatureDnDFlextable2.addTemperature(result.get(j));
 					}
 				}
-				
-				updateTable(temperatureDnDFlextable1);
-				updateTable(temperatureDnDFlextable2);
+
+				temperatureDnDFlextable1 = updateTable(temperatureDnDFlextable1);
+				temperatureDnDFlextable2 = updateTable(temperatureDnDFlextable2);
 
 			}
 		};
 
-		// Make the call to the stock price service.
+		//		temperaturesSvc.initiateCity(temperatureDnDFlextable1.getListOfTemperatures(), callback);
+		//		temperaturesSvc.initiateCity(temperatureDnDFlextable2.getListOfTemperatures(), callback);
 
 		temperaturesSvc.getAllData(callback);
 
@@ -524,23 +542,24 @@ public class TemperatureWatcher implements EntryPoint {
 	}
 
 
-	private void updateTable(DnDFlexTable temperatureDnDFlextableParam) {
+	private DnDFlexTable updateTable(DnDFlexTable temperatureDnDFlextableParam) {
 
 		for (int i = 0; i < temperatureDnDFlextableParam.getListOfTemperatures().size(); i++) {
-			updateTable(temperatureDnDFlextableParam.getListOfTemperatures().get(i), temperatureDnDFlextableParam, temperatureDnDFlextableParam.getListOfTemperatures());
+			temperatureDnDFlextableParam= updateTable(temperatureDnDFlextableParam.getListOfTemperatures().get(i), temperatureDnDFlextableParam, temperatureDnDFlextableParam.getListOfTemperatures());
 		}
 		// Display timestamp showing last refresh.
 		lastUpdatedLabel.setText("Last update : "
 				+ DateTimeFormat.getMediumDateTimeFormat().format(new Date()));
 		// Clear any errors.
 		errorMsgLabel.setVisible(false);
+		return temperatureDnDFlextableParam;
 	}
 	/**
 	 * Update a single row in the stock table.
 	 *
 	 * @param price Stock data for a single row.
 	 */
-	private void updateTable(Temperature temperature, FlexTable temperatureDnDFlextableParam, ArrayList<Temperature> listOfTemperaturesParam) {
+	private DnDFlexTable updateTable(Temperature temperature, DnDFlexTable temperatureDnDFlextableParam, ArrayList<Temperature> listOfTemperaturesParam) {
 		// Make sure the stock is still in the stock table.
 		Boolean boo = false;
 		int row = 0;
@@ -548,7 +567,7 @@ public class TemperatureWatcher implements EntryPoint {
 		for(row = 0; row<listOfTemperaturesParam.size() && !boo ; row++){
 			if (listOfTemperaturesParam.get(row).getCity().toUpperCase().equals(temperature.getCity().toUpperCase())) boo=true;  //can be improved, only compares the city, i.e two cities with the same name in defferent countries/region can't be added
 		}
-		if (!boo) return;	
+		if (!boo) return temperatureDnDFlextableParam;	
 
 
 		// Format the data in the Price and Change fields.
@@ -562,10 +581,10 @@ public class TemperatureWatcher implements EntryPoint {
 		temperatureDnDFlextableParam.setText(row, 0, temperature.getCountry());
 		temperatureDnDFlextableParam.setText(row, 1, temperature.getArea());
 		temperatureDnDFlextableParam.setText(row, 2, temperature.getCity());
-	
-		
+
+
 		temperatureDnDFlextableParam.setText(row, 3, tempText);
-		
+		return temperatureDnDFlextableParam;
 	}
 	public Temperature getCurrentPlace(){
 		return currentPlace;
@@ -577,8 +596,8 @@ public class TemperatureWatcher implements EntryPoint {
 	}
 
 	private void initCities(){
-				
-			populateWithDbData();
+
+		populateWithDbData();
 
 
 	}

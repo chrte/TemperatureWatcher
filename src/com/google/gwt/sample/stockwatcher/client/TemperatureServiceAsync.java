@@ -11,5 +11,7 @@ public interface TemperatureServiceAsync {
 	void setCountry(String tempText, String oldValue, String oldCity, AsyncCallback<String> callback);
 	void setArea(String tempText, String oldValue, String oldCity, AsyncCallback<String>  callback);
 	void setCity(String tempText, String oldValue, AsyncCallback<String>  callback);
+	void initiateCity(Temperature temperautre, AsyncCallback<Temperature> callback);
+	void initiateCity(ArrayList<Temperature> temperatures, AsyncCallback<ArrayList<Temperature>> callback);
 
 }

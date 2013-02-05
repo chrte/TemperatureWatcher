@@ -62,7 +62,7 @@ public class TemperatureServiceImpl extends RemoteServiceServlet implements Temp
 			listOfTemperatures.get(i).setNextUpdate(cal.getTime());
 			dbHandler.initiateCity(listOfTemperatures.get(i).getCountry(), listOfTemperatures.get(i).getArea(), listOfTemperatures.get(i).getCity(),listOfTemperatures.get(i).getTable());
 			dbHandler.setTemperature(listOfTemperatures.get(i).getCity(), temperature);	
-			
+			listOfTemperatures.get(i).setTemperature(temperature);
 		}
 		return listOfTemperatures;
 	}
@@ -70,6 +70,11 @@ public class TemperatureServiceImpl extends RemoteServiceServlet implements Temp
 	
 	public double getTemperatureInCity(String city){
 		return dbHandler.getTemperature(city);
+	}
+	public Temperature initiateCity(Temperature temperature){
+		dbHandler.initiateCity(temperature.getCountry(), temperature.getArea(), temperature.getCity(), temperature.getTable());
+		dbHandler.setTemperature(temperature.getCity(), getTempFromXML(temperature));
+		return temperature;
 	}
 	public ArrayList<Temperature> getAllData(){
 		ArrayList<String> cities = dbHandler.getAllCities();
@@ -173,5 +178,14 @@ public class TemperatureServiceImpl extends RemoteServiceServlet implements Temp
 	public String setCity(String newValue, String oldValue) {
 		dbHandler.setCity(newValue, oldValue);
 		return "i'm awesome";
+	}
+
+
+	@Override
+	public ArrayList<Temperature> initiateCity(ArrayList<Temperature> temperatures) {
+		for (int i = 0; temperatures.size()>i;i++){
+			initiateCity(temperatures.get(i));
+		}
+		return temperatures;
 	}
 }

@@ -15,6 +15,8 @@ public interface TemperatureService extends RemoteService {
 	String setCountry(String newValue, String oldValue, String oldCity);
 	String setArea(String newValue, String oldValue, String oldCity);
 	String setCity(String newValue, String oldValue);
+	Temperature initiateCity(Temperature temperature);
+	ArrayList<Temperature> initiateCity(ArrayList<Temperature> temperatures);
 	
 	
 	

@@ -316,7 +316,7 @@ public class DatabaseHandler {
 		ResultSet rs=null;
 		try {
 			stmt = connection.createStatement();
-			rs = stmt.executeQuery("SELECT "+TABLECOLUMN+" FROM " +DATABASENAME+"."+TABLENAME+" WHERE "+CITYCOLUMN+"='"+city+"';");
+			rs = stmt.executeQuery("SELECT `"+TABLECOLUMN+"` FROM " +DATABASENAME+"."+TABLENAME+" WHERE "+CITYCOLUMN+"='"+city+"';");
 			while (rs.next()){
 				return rs.getInt(TABLECOLUMN);
 			}
