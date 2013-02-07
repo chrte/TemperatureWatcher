@@ -60,9 +60,10 @@ public class FlexTableDropController extends AbstractPositioningDropController  
 	private Widget positioner = null;
 	private int targetRow;
 	
-	public FlexTableDropController(DnDFlexTable flexTable) {
+	public FlexTableDropController(DnDFlexTable flexTable, TemperatureWatcher parent) {
 		super(flexTable);
 		this.flexTable = flexTable;
+		this.parent=parent;
 	}
 
 	@Override
@@ -75,21 +76,23 @@ public class FlexTableDropController extends AbstractPositioningDropController  
 		String country =  trDragController.getDraggableTable().getText(trDragController.getDragRow(), 0);
 		String area =  trDragController.getDraggableTable().getText(trDragController.getDragRow(), 1);
 		String city =  trDragController.getDraggableTable().getText(trDragController.getDragRow(), 2);
-		Temperature temperature = new Temperature(country, area, city,this.flexTable.getId());
-		this.flexTable.addTemperature(temperature);		
-		int index = trDragController.getDraggableTable().findIndexOfCity(city);
-		trDragController.getDraggableTable().removeTemperature(index);
-		
-		
-		//Moves the city to another Flextable
-		FlexTableUtil.moveRow(trDragController.getDraggableTable(), flexTable,
-				trDragController.getDragRow(), targetRow + 1);
+		Temperature oldTemperature = new Temperature(country, area, city,this.flexTable.getId(),trDragController.getDragRow());
+//		Temperature temperature = new Temperature(country, area, city,this.flexTable.getId(),targetRow); //TODO, test target row
+//		this.flexTable.addTemperature(temperature);		
+//		int index = trDragController.getDraggableTable().findIndexOfCity(city);
+//		trDragController.getDraggableTable().removeTemperature(index);
+//		
+//		
+//		//Moves the city to another Flextable
+//		FlexTableUtil.moveRow(trDragController.getDraggableTable(), flexTable,
+//				trDragController.getDragRow(), targetRow + 1);
 		
 		//Adding the styles
 		this.flexTable.getCellFormatter().addStyleName(targetRow+1, 3, "watchListNumericColumn");
 		this.flexTable.getCellFormatter().addStyleName(targetRow+1, 4, "watchListNumericColumn");
 		this.flexTable.getCellFormatter().addStyleName(targetRow+1, 5, "watchListRemoveColumn");
-
+		
+		this.parent.updateRowInDb(city, targetRow+1, this.flexTable.getListOfTemperatures().get(targetRow).getCity(), oldTemperature.getRow());
 		super.onDrop(context);
 	}
 

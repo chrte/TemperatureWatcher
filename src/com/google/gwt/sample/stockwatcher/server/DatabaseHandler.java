@@ -29,6 +29,7 @@ public class DatabaseHandler {
 	private static final String CITYCOLUMN = "city";
 	private static final String TEMPERATURECOLUMN = "temperature";
 	private static final String TABLECOLUMN="table";
+	private static final String ROWCOLUMN="row";
 	private static final String USERNAME="TDDD24";
 	private static final String PASSWORD="TDDD24";
 	private Connection connection;
@@ -149,13 +150,13 @@ public class DatabaseHandler {
 	 * @param area The area
 	 * @param city The city
 	 */
-	public void initiateCity(String country, String area, String city, int table){
+	public void initiateCity(String country, String area, String city, int table, int row){
 		initiateConnection();
 		try {
 			java.sql.Statement stmt=null;
 			stmt =connection.createStatement();
 			if(getCountry(city).equals("")){
-				stmt.executeUpdate("INSERT IGNORE INTO "+DATABASENAME+"."+TABLENAME+" VALUES ('"+country+"','"+area+"','"+city+"',NULL,"+table+");");
+				stmt.executeUpdate("INSERT IGNORE INTO "+DATABASENAME+"."+TABLENAME+" VALUES ('"+country+"','"+area+"','"+city+"',NULL,"+table+","+row+");");
 			}
 		} catch (SQLException e) {
 
@@ -326,6 +327,38 @@ public class DatabaseHandler {
 		}
 
 		return 0; 
+	}
+	public int getRow(String city) {
+		initiateConnection();
+		java.sql.Statement stmt = null;
+		ResultSet rs=null;
+		try {
+			stmt = connection.createStatement();
+			rs = stmt.executeQuery("SELECT `"+ROWCOLUMN+"` FROM " +DATABASENAME+"."+TABLENAME+" WHERE "+CITYCOLUMN+"='"+city+"';");
+			while (rs.next()){
+				return rs.getInt(ROWCOLUMN);
+			}
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+		return 0; 
+	}
+	public void setRow(String city, int row) {
+		initiateConnection();
+		try {
+			java.sql.Statement stmt=null;
+			stmt =connection.createStatement();
+
+			stmt.executeUpdate("UPDATE "+DATABASENAME+"."+TABLENAME+" SET "+ROWCOLUMN+"='"+row+"' WHERE "+CITYCOLUMN+"='"+city+"';");
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+		
 	}
 }
 

@@ -19,6 +19,7 @@ public class Temperature implements Serializable  {
 	private int table;
 	private Date lastUpdate=null; //to know if we haven't get any updates
 	private Date nextUpdate=null; //to know if we haven't get any updates
+	private int row;
 
 	/**
 	 * Default empty constructor for the temperature class
@@ -28,11 +29,12 @@ public class Temperature implements Serializable  {
 	}
 	
 	
-	public Temperature(String country, String area, String city, int table){
+	public Temperature(String country, String area, String city, int table, int row){
 		this.city = city;
 		this.area = area;
 		this.country = country;
 		this.table=table;
+		this.row=row;
 		
 	}
 	
@@ -164,6 +166,16 @@ public class Temperature implements Serializable  {
 	public int getTable() {
 	
 		return this.table;
+	}
+
+
+	public int getRow() {
+		return row;
+	}
+
+
+	public void setRow(int row) {
+		this.row = row;
 	}
 
 }
