@@ -3,6 +3,7 @@ package com.google.gwt.sample.stockwatcher.client;
 
 import com.allen_sauer.gwt.dnd.client.DragContext;
 import com.allen_sauer.gwt.dnd.client.drop.AbstractPositioningDropController;
+import com.allen_sauer.gwt.dnd.client.drop.DropController;
 import com.allen_sauer.gwt.dnd.client.util.CoordinateLocation;
 import com.allen_sauer.gwt.dnd.client.util.DOMUtil;
 import com.allen_sauer.gwt.dnd.client.util.Location;
@@ -69,6 +70,7 @@ public class FlexTableDropController extends AbstractPositioningDropController  
 	@Override
 	public void onDrop(DragContext context) {
 		FlexTableDragController trDragController = (FlexTableDragController) context.dragController;
+		FlexTableDropController trDropController = (FlexTableDropController) context.dropController;
 		if(targetRow==-1){
 			targetRow=0;
 		}
@@ -91,8 +93,13 @@ public class FlexTableDropController extends AbstractPositioningDropController  
 		this.flexTable.getCellFormatter().addStyleName(targetRow+1, 3, "watchListNumericColumn");
 		this.flexTable.getCellFormatter().addStyleName(targetRow+1, 4, "watchListNumericColumn");
 		this.flexTable.getCellFormatter().addStyleName(targetRow+1, 5, "watchListRemoveColumn");
+		String switchCity ="";
+		if (this.flexTable.getListOfTemperatures().size()>targetRow) {
+			switchCity = this.flexTable.getListOfTemperatures().get(targetRow).getCity();
+		}
+	
 		
-		this.parent.updateRowInDb(city, targetRow+1, this.flexTable.getListOfTemperatures().get(targetRow).getCity(), oldTemperature.getRow());
+		this.parent.updateRowInDb(city, targetRow+1,trDropController.flexTable.getId(),switchCity, oldTemperature.getRow(),oldTemperature.getTable());
 		super.onDrop(context);
 	}
 

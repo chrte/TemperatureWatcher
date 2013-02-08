@@ -28,7 +28,7 @@ public class DatabaseHandler {
 	private static final String AREACOLUMN ="area";
 	private static final String CITYCOLUMN = "city";
 	private static final String TEMPERATURECOLUMN = "temperature";
-	private static final String TABLECOLUMN="table";
+	private static final String TABLECOLUMN="tableNr";
 	private static final String ROWCOLUMN="row";
 	private static final String USERNAME="TDDD24";
 	private static final String PASSWORD="TDDD24";
@@ -351,7 +351,7 @@ public class DatabaseHandler {
 			java.sql.Statement stmt=null;
 			stmt =connection.createStatement();
 
-			stmt.executeUpdate("UPDATE "+DATABASENAME+"."+TABLENAME+" SET "+ROWCOLUMN+"='"+row+"' WHERE "+CITYCOLUMN+"='"+city+"';");
+			stmt.executeUpdate("UPDATE "+DATABASENAME+"."+TABLENAME+" SET "+ROWCOLUMN+"='"+row+"' WHERE "+TABLENAME+"."+CITYCOLUMN+"='"+city+"';");
 
 		} catch (SQLException e) {
 
@@ -359,6 +359,20 @@ public class DatabaseHandler {
 		}
 
 		
+	}
+	public void setTable(String city, int table) {
+		initiateConnection();
+		try {
+			java.sql.Statement stmt=null;
+			stmt =connection.createStatement();
+			String query = "UPDATE "+DATABASENAME+"."+TABLENAME+" SET "+TABLECOLUMN+"='"+table+"' WHERE "+TABLENAME+"."+CITYCOLUMN+"='"+city+"';";
+		
+			stmt.executeUpdate(query);
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
 	}
 }
 

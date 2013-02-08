@@ -191,9 +191,12 @@ public class TemperatureServiceImpl extends RemoteServiceServlet implements Temp
 
 
 	@Override
-	public String setRowsInDb(String city1, int row1, String city2, int row2) {
+	public String setRowsInDb(String city1, int row1,int table1, String city2, int row2, int table2) {
 		dbHandler.setRow(city1,row1);
+		dbHandler.setTable(city1,table1);
+		if (city2.equals("")) return "";
 		dbHandler.setRow(city2,row2);
+		dbHandler.setTable(city2,table2);
 		return "";
 	}
 }

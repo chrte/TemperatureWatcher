@@ -13,6 +13,6 @@ public interface TemperatureServiceAsync {
 	void setCity(String tempText, String oldValue, AsyncCallback<String>  callback);
 	void initiateCity(Temperature temperautre, AsyncCallback<Temperature> callback);
 	void initiateCity(ArrayList<Temperature> temperatures, AsyncCallback<ArrayList<Temperature>> callback);
-	void setRowsInDb(String city1, int row1, String city2, int row2, AsyncCallback<String> callback);
+	void setRowsInDb(String city1, int row1, int table1, String city2, int row2, int table2, AsyncCallback<String> callback);
 
 }
